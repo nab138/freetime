@@ -23,7 +23,7 @@ export default async function Home() {
           <h2>A Flusche & Sharp project</h2>
         </div>
       </div>
-
+      <p>Freetime is currently in closed beta.</p>
       <form
         action={async () => {
           "use server";
