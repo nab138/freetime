@@ -5,6 +5,7 @@
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --foreground-rgb: 0, 0, 0;
+  --foreground-secondary-rgb: 61, 61, 61;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 
@@ -35,15 +36,16 @@
 
   --callout-rgb: 238, 240, 241;
   --callout-border-rgb: 172, 175, 176;
-  --card-rgb: 180, 185, 188;
-  --card-border-rgb: 131, 134, 135;
+  --card-rgb: 150, 150, 150;
+  --card-border-rgb: 100, 100, 100;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-secondary-rgb: 202, 202, 202;
+    --background-start-rgb: 45, 45, 45;
+    --background-end-rgb: 30, 30, 30
 
     --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
     --secondary-glow: linear-gradient(
@@ -65,10 +67,10 @@
       #ffffff80
     );
 
-    --callout-rgb: 20, 20, 20;
+    --callout-rgb: 204, 64, 64;
     --callout-border-rgb: 108, 108, 108;
-    --card-rgb: 100, 100, 100;
-    --card-border-rgb: 200, 200, 200;
+    --card-rgb: 50, 50, 50;
+    --card-border-rgb: 100, 100, 100;
   }
 }
 
@@ -109,5 +111,6 @@ h1 {
   font-size: 3rem;
 }
 h2 {
-  color: #cacaca;
+  color: rgb(var(--foreground-secondary-rgb));
 }
+

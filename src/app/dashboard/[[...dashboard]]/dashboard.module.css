@@ -1,0 +1,42 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding: 3rem;
+  min-height: 100vh;
+  gap: 5rem;
+}
+
+.content {
+  display: flex;
+}
+
+.account {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.account h2 {
+  margin-bottom: 10px;
+}
+
+.accountButtons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.accountDetails {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.card {
+  background: rgb(var(--card-rgb));
+  border: 1px solid rgb(var(--card-border-rgb));
+  border-radius: 10px;
+  padding: 1rem;
+  width: 100%;
+}
