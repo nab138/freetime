@@ -1,8 +1,22 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   padding: 3rem;
   min-height: 100vh;
+  gap: 5rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+
+.header img {
+  border-radius: 20px;
+  border-color: var(--tile-border);
+  border-width: 50px;
 }
