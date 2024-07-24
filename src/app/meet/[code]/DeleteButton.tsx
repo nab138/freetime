@@ -37,7 +37,7 @@ export default function DeleteButton({ meet }: { meet: MeetData }) {
                 color: "white",
               }}
               onClick={async () => {
-                let result = await deleteMeet(meet.code);
+                let result = await deleteMeet(meet.code, meet.adminCode);
                 if (result && result.error) {
                   toast.error(result.error);
                 } else {

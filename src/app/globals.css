@@ -119,7 +119,17 @@ main {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: min(3rem, 5vw);
+  padding: min(3rem, 4vw);
   min-height: 100vh;
   gap: 5rem;
+}
+
+
+@media screen and (max-width: 750px) {
+  h1 {
+    font-size: 2.75rem;
+  }
+  main {
+    gap: 2rem;
+  }
 }

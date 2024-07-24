@@ -41,6 +41,10 @@ export default function MeetsCard({
             "use client";
             let name = (document.getElementById("name") as HTMLInputElement)
               .value;
+            if (name === "") {
+              toast.warning("Meet name cannot be empty");
+              return;
+            }
             let result = await createMeet(
               session,
               (name ?? "Unamed Meet").toString()

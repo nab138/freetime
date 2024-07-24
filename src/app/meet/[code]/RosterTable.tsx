@@ -35,7 +35,7 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
               toast.error("Invalid .csv file, unable to parse line " + lineNum);
               return;
             }
-            athletes.push({ bib: bibNum, name, age });
+            athletes.push({ bib: bibNum, name, age, gender, team });
           }
         }
         (async () => {
@@ -57,16 +57,20 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Age/Grade</th>
               <th>Bib</th>
+              <th>Gender</th>
+              <th>Age/Grade</th>
+              <th>Team</th>
             </tr>
           </thead>
           <tbody>
             {meet.roster.map((athlete) => (
               <tr key={athlete.bib + athlete.name}>
                 <td>{athlete.name}</td>
-                <td>{athlete.age}</td>
                 <td>{athlete.bib}</td>
+                <td>{athlete.gender}</td>
+                <td>{athlete.age}</td>
+                <td>{athlete.team}</td>
               </tr>
             ))}
 
@@ -75,10 +79,16 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
                 <input type="text" id="name" placeholder="Name" required />
               </td>
               <td>
+                <input type="text" id="bib" placeholder="Bib" required />
+              </td>
+              <td>
+                <input type="text" id="gender" placeholder="Gender" required />
+              </td>
+              <td>
                 <input type="text" id="age" placeholder="Age/Grade" required />
               </td>
               <td>
-                <input type="text" id="bib" placeholder="Bib" required />
+                <input type="text" id="team" placeholder="Team" required />
               </td>
             </tr>
           </tbody>
@@ -95,6 +105,10 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
             let age = parseInt(
               (document.getElementById("age") as HTMLInputElement).value
             );
+            let gender = (document.getElementById("gender") as HTMLInputElement)
+              .value;
+            let team = (document.getElementById("team") as HTMLInputElement)
+              .value;
             if (isNaN(bib) || isNaN(age) || name === "") {
               toast.error("Please fill out all fields correctly.");
               return;
@@ -103,7 +117,9 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
               meet.code,
               bib,
               name,
-              age
+              age,
+              gender,
+              team
             );
             if (result && result.error) {
               toast.error(result.error);
@@ -117,11 +133,9 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
         <ClientButton onClick={triggerFileInput}>Import .csv</ClientButton>
         <ClientButton
           onClick={async () => {
-            let result = await clearRoster(meet.code);
-            if (result && result.error) {
-              toast.error(result.error);
-            } else {
-              window.location.reload();
+            let delModal = document.getElementById("clearModal");
+            if (delModal) {
+              delModal.style.display = "flex";
             }
           }}
         >
@@ -134,7 +148,49 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
           accept=".csv"
           onChange={handleFileSelect}
         />
+        <div className={styles.modalContainer} id="clearModal">
+          <div className={styles.modal}>
+            <h2 style={{ color: "#e8554a" }}>Are you sure?</h2>
+            <p style={{ marginTop: "10px", marginBottom: "20px" }}>
+              Clearing your roster is an irreversable, destructive action.
+            </p>
+            <div className={styles.rosterButtons}>
+              <ClientButton
+                style={{
+                  backgroundColor: "#e8554a",
+                  color: "white",
+                }}
+                onClick={async () => {
+                  let result = await clearRoster(meet.code);
+                  if (result && result.error) {
+                    toast.error(result.error);
+                  } else {
+                    window.location.reload();
+                  }
+                }}
+              >
+                Delete
+              </ClientButton>
+              <ClientButton
+                onClick={function (): void {
+                  let delModal = document.getElementById("clearModal");
+                  if (delModal) {
+                    delModal.style.display = "none";
+                  }
+                }}
+              >
+                Cancel
+              </ClientButton>
+            </div>
+          </div>
+        </div>
       </div>
+      <p style={{ marginTop: "10px", marginBottom: 0, color: "#aaa" }}>
+        CSVs are expected to be in this format with the first line as a header:
+      </p>
+      <p style={{ marginBottom: 0, color: "#aaa", fontSize: "0.9em" }}>
+        First Name, Last Name, Grade/Age, Team, Gender, Bib
+      </p>
     </div>
   );
 }

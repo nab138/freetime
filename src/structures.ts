@@ -14,4 +14,6 @@ export type Athlete = {
   bib: number;
   name: string;
   age: number;
+  gender: string;
+  team: string;
 };
