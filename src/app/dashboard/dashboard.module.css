@@ -1,0 +1,43 @@
+.content {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.account {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.account h2,
+.meets h2 {
+  margin-bottom: 10px;
+}
+
+.accountButtons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.accountDetails {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.meets ul {
+  list-style-type: none;
+  text-decoration: underline;
+}
+
+.meets ul li {
+  padding: 4px 0;
+}
+
+@media screen and (max-width: 750px) {
+  .content {
+    flex-direction: column;
+  }
+}

@@ -114,3 +114,12 @@ h2 {
   color: rgb(var(--foreground-secondary-rgb));
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: min(3rem, 5vw);
+  min-height: 100vh;
+  gap: 5rem;
+}

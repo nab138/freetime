@@ -1,0 +1,14 @@
+.card {
+  background: rgb(var(--card-rgb));
+  border: 1px solid rgb(var(--card-border-rgb));
+  border-radius: 10px;
+  padding: 1rem;
+  min-width: 300px;
+  height: fit-content;
+}
+
+@media screen and (max-width: 750px) {
+  .card {
+    width: 100%;
+  }
+}

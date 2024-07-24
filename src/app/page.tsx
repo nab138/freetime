@@ -10,7 +10,7 @@ export default async function Home() {
     redirect("/dashboard");
   }
   return (
-    <main className={styles.main}>
+    <main>
       <div className={styles.header}>
         <Image
           src="/logo.png"
