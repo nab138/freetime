@@ -75,3 +75,11 @@
   min-width: 300px;
   height: fit-content;
 }
+
+.delete {
+  cursor: pointer;
+  padding: 4px;
+  background-color: #e8554a;
+  color: white;
+  margin-right: 10px;
+}

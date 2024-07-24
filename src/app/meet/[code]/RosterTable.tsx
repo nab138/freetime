@@ -7,6 +7,7 @@ import {
   addAthletesToMeetRoster,
   addAthleteToMeetRoster,
   clearRoster,
+  deleteStudentFromMeet,
 } from "./actions";
 import { toast } from "sonner";
 import { ChangeEventHandler, useRef } from "react";
@@ -64,9 +65,20 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
             </tr>
           </thead>
           <tbody>
-            {meet.roster.map((athlete) => (
-              <tr key={athlete.bib + athlete.name}>
-                <td>{athlete.name}</td>
+            {meet.roster.map((athlete, i) => (
+              <tr key={i}>
+                <td>
+                  <ClientButton
+                    className={styles.delete}
+                    onClick={async () => {
+                      await deleteStudentFromMeet(meet, i);
+                      window.location.reload();
+                    }}
+                  >
+                    🗑
+                  </ClientButton>
+                  {athlete.name}
+                </td>
                 <td>{athlete.bib}</td>
                 <td>{athlete.gender}</td>
                 <td>{athlete.age}</td>
@@ -79,13 +91,31 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
                 <input type="text" id="name" placeholder="Name" required />
               </td>
               <td>
-                <input type="text" id="bib" placeholder="Bib" required />
+                <input
+                  type="text"
+                  id="bib"
+                  placeholder="Bib"
+                  required
+                  style={{ width: "80px" }}
+                />
               </td>
               <td>
-                <input type="text" id="gender" placeholder="Gender" required />
+                <input
+                  style={{ width: "80px" }}
+                  type="text"
+                  id="gender"
+                  placeholder="Gender"
+                  required
+                />
               </td>
               <td>
-                <input type="text" id="age" placeholder="Age/Grade" required />
+                <input
+                  style={{ width: "80px" }}
+                  type="text"
+                  id="age"
+                  placeholder="Age/Grade"
+                  required
+                />
               </td>
               <td>
                 <input type="text" id="team" placeholder="Team" required />

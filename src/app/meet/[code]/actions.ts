@@ -65,4 +65,7 @@ export async function deleteMeet(code: string, adminCode: string) {
   await kv.del("admin-" + adminCode);
 }
 
-export async function deleteStudentFromMeet(meet: MeetData, index: number) {}
+export async function deleteStudentFromMeet(meet: MeetData, index: number) {
+  meet.roster.splice(index, 1);
+  await kv.set(meet.code, meet);
+}

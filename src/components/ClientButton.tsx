@@ -7,14 +7,21 @@ export default function ClientButton({
   onClick,
   type = "button",
   style = {},
+  className = "",
 }: Readonly<{
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
   style?: React.CSSProperties;
+  className?: string;
   onClick: () => void;
 }>) {
   return (
-    <button className={styles.btn} type={type} onClick={onClick} style={style}>
+    <button
+      className={styles.btn + (className === "" ? "" : ` ${className}`)}
+      type={type}
+      onClick={onClick}
+      style={style}
+    >
       {children}
     </button>
   );
