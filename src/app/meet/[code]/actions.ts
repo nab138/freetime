@@ -19,3 +19,30 @@ export async function addAthleteToMeetRoster(
   meet?.roster.push({ bib, name, age });
   await kv.set(code, meet);
 }
+
+export async function addAthletesToMeetRoster(
+  code: string,
+  athletes: { bib: number; name: string; age: number }[]
+) {
+  if ((await kv.exists(code)) === 0) {
+    return { error: "Invalid meet code." };
+  }
+  let meet = await kv.get<MeetData>(code);
+  if (!meet) {
+    return { error: "Failed to retrieve meet data." };
+  }
+  meet.roster = meet.roster.concat(athletes);
+  await kv.set(code, meet);
+}
+
+export async function clearRoster(code: string) {
+  if ((await kv.exists(code)) === 0) {
+    return { error: "Invalid meet code." };
+  }
+  let meet = await kv.get<MeetData>(code);
+  if (!meet) {
+    return { error: "Failed to retrieve meet data." };
+  }
+  meet.roster = [];
+  await kv.set(code, meet);
+}
