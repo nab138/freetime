@@ -73,6 +73,10 @@ export default async function Meet({ params }: { params: { code: string } }) {
           {meet.roster.length === 0 && <p>No one has joined this meet yet!</p>}
           <RosterTable meet={meet} />
         </Card>
+        <Card>
+          <h2>Races</h2>
+          <p>uhhhh</p>
+        </Card>
       </div>
     </main>
   );
