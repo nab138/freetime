@@ -46,3 +46,12 @@ export async function clearRoster(code: string) {
   meet.roster = [];
   await kv.set(code, meet);
 }
+
+export async function deleteMeet(code: string) {
+  if ((await kv.exists(code)) === 0) {
+    return {
+      error: "Invalid meet code. This meet may have already been deleted.",
+    };
+  }
+  await kv.del(code);
+}

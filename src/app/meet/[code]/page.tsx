@@ -3,11 +3,11 @@ import styles from "./meet.module.css";
 import { auth } from "@/auth";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
-import ClientButton from "@/components/ClientButton";
 import { MeetData, UserData } from "@/structures";
 import { kv } from "@vercel/kv";
 import { redirect } from "next/navigation";
 import RosterTable from "./RosterTable";
+import DeleteButton from "./DeleteButton";
 
 export default async function Meet({ params }: { params: { code: string } }) {
   let session = await auth();
@@ -63,9 +63,10 @@ export default async function Meet({ params }: { params: { code: string } }) {
           <p>
             <strong>Meet Code:</strong> {meet.code}
           </p>
-          <p>
+          <p style={{ marginBottom: "10px" }}>
             <strong>Admin Code:</strong> {meet.adminCode}
           </p>
+          <DeleteButton meet={meet} />
         </Card>
         <Card className={styles.roster}>
           <h2>Roster</h2>

@@ -16,6 +16,7 @@ export default async function Home() {
   }
 
   let data = await kv.get<UserData>(session.user.email);
+  let validMeetCodes = data?.meets ?? [];
   let meets: MeetData[] = [];
   if (!data) {
     data = { email: session.user.email, meets: [] };
@@ -25,7 +26,13 @@ export default async function Home() {
     let meet = await kv.get<MeetData>(code);
     if (meet) {
       meets.push(meet);
+    } else {
+      validMeetCodes = validMeetCodes.filter((c) => c !== code);
     }
+  }
+  if (validMeetCodes.length !== data.meets.length) {
+    data.meets = validMeetCodes;
+    await kv.set(session.user.email, data);
   }
 
   return (

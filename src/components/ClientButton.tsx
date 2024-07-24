@@ -6,13 +6,15 @@ export default function ClientButton({
   children,
   onClick,
   type = "button",
+  style = {},
 }: Readonly<{
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
+  style?: React.CSSProperties;
   onClick: () => void;
 }>) {
   return (
-    <button className={styles.btn} type={type} onClick={onClick}>
+    <button className={styles.btn} type={type} onClick={onClick} style={style}>
       {children}
     </button>
   );
