@@ -4,10 +4,10 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { kv } from "@vercel/kv";
 import { MeetData, UserData } from "@/structures";
-import { generate } from "random-words";
-import { Session } from "next-auth";
 import Card from "@/components/Card";
-import { toast } from "sonner";
+import { createMeet, joinMeet } from "./actions";
+import { FormEvent } from "react";
+import MeetsCard from "./meetsCard";
 
 export default async function Home() {
   let session = await auth();
@@ -65,132 +65,8 @@ export default async function Home() {
             <Button type="submit">Sign Out</Button>
           </form>
         </Card>
-        <Card className={styles.meets}>
-          <h2>Meets</h2>
-          {data.meets.length === 0 ? (
-            <p>You have no meets. Create one to get started!</p>
-          ) : (
-            <ul>
-              {meets.map((meet) => (
-                <li key={meet.code}>
-                  <a href={`/meet/${meet.code}`}>
-                    {meet.name + " - " + meet.code}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-          <form
-            className={styles.accountButtons}
-            action={async (data: FormData) => {
-              "use server";
-              await createMeet(
-                session,
-                (data.get("name") ?? "Unamed Meet").toString()
-              );
-              redirect("/dashboard");
-            }}
-          >
-            {/* Add name field */}
-            <input type="text" name="name" placeholder="Meet Name" required />
-            <Button type="submit">Create Meet</Button>
-          </form>
-          <p style={{ marginTop: "15px" }}>
-            {data.meets.length === 0 ? "Or, i" : "I"}f you have an admin code:
-          </p>
-          <form
-            className={styles.accountButtons}
-            action={async (data: FormData) => {
-              "use server";
-              await joinMeet(session, (data.get("admincode") ?? "").toString());
-              redirect("/dashboard");
-            }}
-          >
-            {/* Add name field */}
-            <input
-              type="text"
-              name="admincode"
-              placeholder="Admin Code"
-              required
-            />
-            <Button type="submit">Add Meet</Button>
-          </form>
-        </Card>
+        <MeetsCard session={session} data={data} meets={meets} />
       </div>
     </main>
   );
 }
-
-function generateCode() {
-  return generate({ maxLength: 6 }) + randomNumber(10, 99).toString();
-}
-
-function randomNumber(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const createMeet = async (session: Session, name: string) => {
-  if (!session.user || !session.user.email) {
-    return;
-  }
-  let userData = await kv.get<UserData>(session.user.email);
-  if (!userData) {
-    userData = { email: session.user.email, meets: [] };
-  }
-  let code = generateCode();
-  let iter = 0;
-  while ((await kv.exists(code)) > 1) {
-    if (iter > 10) {
-      toast.error("Failed to generate a unique code. Please try again.");
-      return;
-    }
-    code = generateCode();
-    iter++;
-  }
-
-  userData.meets.push(code);
-  await kv.set(session.user.email, userData);
-
-  let adminCode = generateCode();
-  iter = 0;
-  while ((await kv.exists("admin-" + adminCode)) > 1) {
-    if (iter > 10) {
-      toast.error("Failed to generate a unique admin code. Please try again.");
-      return;
-    }
-    adminCode = generateCode();
-    iter++;
-  }
-
-  let meetData: MeetData = { code, name, roster: [], adminCode };
-  await Promise.all([
-    kv.set(code, meetData),
-    kv.set("admin-" + adminCode, code),
-  ]);
-};
-
-const joinMeet = async (session: Session, code: string) => {
-  if (!session.user || !session.user.email) {
-    return;
-  }
-  let userData = await kv.get<UserData>(session.user.email);
-  if (!userData) {
-    userData = { email: session.user.email, meets: [] };
-  }
-
-  if ((await kv.exists("admin-" + code)) === 0) {
-    toast.error("Invalid admin code.");
-    return;
-  }
-  let meetCode = await kv.get<string>("admin-" + code);
-  if (!meetCode) {
-    toast.error("Found admin code, but failed to get meet code.");
-    return;
-  }
-  if (userData.meets.includes(meetCode)) {
-    toast.warning("You are already in this meet.");
-    return;
-  }
-  userData.meets.push(meetCode);
-  await kv.set(session.user.email, userData);
-};
