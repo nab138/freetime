@@ -23,13 +23,8 @@
   border: none;
 }
 
-.roster p,
-.roster table {
+.roster p {
   margin-bottom: 10px;
-}
-
-.roster {
-  overflow-x: auto;
 }
 
 .header {
@@ -42,4 +37,13 @@
 .rosterButtons {
   display: flex;
   gap: 10px;
+}
+
+.tableContainer {
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 50vh;
+  width: 100%;
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }

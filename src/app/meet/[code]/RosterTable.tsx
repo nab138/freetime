@@ -52,36 +52,38 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
 
   return (
     <div>
-      <table border={1} className={styles.table}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Age/Grade</th>
-            <th>Bib</th>
-          </tr>
-        </thead>
-        <tbody>
-          {meet.roster.map((athlete) => (
-            <tr key={athlete.bib + athlete.name}>
-              <td>{athlete.name}</td>
-              <td>{athlete.age}</td>
-              <td>{athlete.bib}</td>
+      <div className={styles.tableContainer}>
+        <table border={1} className={styles.table}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age/Grade</th>
+              <th>Bib</th>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {meet.roster.map((athlete) => (
+              <tr key={athlete.bib + athlete.name}>
+                <td>{athlete.name}</td>
+                <td>{athlete.age}</td>
+                <td>{athlete.bib}</td>
+              </tr>
+            ))}
 
-          <tr>
-            <td>
-              <input type="text" id="name" placeholder="Name" required />
-            </td>
-            <td>
-              <input type="text" id="age" placeholder="Age/Grade" required />
-            </td>
-            <td>
-              <input type="text" id="bib" placeholder="Bib" required />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <td>
+                <input type="text" id="name" placeholder="Name" required />
+              </td>
+              <td>
+                <input type="text" id="age" placeholder="Age/Grade" required />
+              </td>
+              <td>
+                <input type="text" id="bib" placeholder="Bib" required />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div className={styles.rosterButtons}>
         <ClientButton
           onClick={async () => {
