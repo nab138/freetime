@@ -2,16 +2,12 @@
 
 import { MeetData, UserData } from "@/structures";
 import styles from "./dashboard.module.css";
-
 import Card from "@/components/Card";
 import { Session } from "next-auth";
-import { FormEvent } from "react";
 import { createMeet, joinMeet } from "./actions";
-import { redirect } from "next/navigation";
-import Button from "@/components/Button";
 import { toast } from "sonner";
 import ClientButton from "@/components/ClientButton";
-import Router from "next/router";
+import Link from "next/link";
 
 export default function MeetsCard({
   data,
@@ -31,7 +27,9 @@ export default function MeetsCard({
         <ul>
           {meets.map((meet) => (
             <li key={meet.code}>
-              <a href={`/meet/${meet.code}`}>{meet.name + " - " + meet.code}</a>
+              <Link href={`/meet/${meet.code}`}>
+                {meet.name + " - " + meet.code}
+              </Link>
             </li>
           ))}
         </ul>
@@ -49,8 +47,9 @@ export default function MeetsCard({
             );
             if (result && result.error) {
               toast.error(result.error);
+            } else {
+              window.location.reload();
             }
-            window.location.reload();
           }}
         >
           Create Meet
@@ -71,8 +70,9 @@ export default function MeetsCard({
               toast.error(result.error);
             } else if (result && result?.warning) {
               toast.warning(result.warning);
+            } else {
+              window.location.reload();
             }
-            window.location.reload();
           }}
         >
           Add Meet

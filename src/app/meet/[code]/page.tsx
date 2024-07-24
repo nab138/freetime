@@ -1,9 +1,13 @@
+import styles from "./meet.module.css";
+
 import { auth } from "@/auth";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
+import ClientButton from "@/components/ClientButton";
 import { MeetData, UserData } from "@/structures";
 import { kv } from "@vercel/kv";
 import { redirect } from "next/navigation";
+import RosterTable from "./RosterTable";
 
 export default async function Meet({ params }: { params: { code: string } }) {
   let session = await auth();
@@ -39,10 +43,36 @@ export default async function Meet({ params }: { params: { code: string } }) {
 
   return (
     <main>
-      <h1>{meet.name}</h1>
-      <Card>
-        <p>Admin Code: {meet.adminCode}</p>
-      </Card>
+      <div className={styles.header}>
+        <h1>{meet.name}</h1>
+        <form
+          action={async () => {
+            "use server";
+            redirect("/dashboard");
+          }}
+        >
+          <Button type="submit">Back to dashboard</Button>
+        </form>
+      </div>
+      <div className={styles.content}>
+        <Card>
+          <h2>Meet Info</h2>
+          <p>
+            <strong>Name:</strong> {meet.name}
+          </p>
+          <p>
+            <strong>Meet Code:</strong> {meet.code}
+          </p>
+          <p>
+            <strong>Admin Code:</strong> {meet.adminCode}
+          </p>
+        </Card>
+        <Card className={styles.roster}>
+          <h2>Roster</h2>
+          {meet.roster.length === 0 && <p>No one has joined this meet yet!</p>}
+          <RosterTable meet={meet} />
+        </Card>
+      </div>
     </main>
   );
 }
