@@ -120,7 +120,12 @@ export default function Timing({ raceCode }: { raceCode: string }) {
                     <td>
                       <ClientButton
                         className={styles.deleteBtn}
-                        onClick={() => {}}
+                        onClick={() => {
+                          let newFinishers = [...finishers];
+                          newFinishers.splice(index, 1);
+                          setFinishers(newFinishers);
+                          setTimes(raceCode, newFinishers);
+                        }}
                       >
                         🗑
                       </ClientButton>
@@ -145,19 +150,24 @@ function formatTimeDifference(
   const timeDifference = currentTime.getTime() - startTime.getTime();
 
   const totalSeconds = Math.floor(timeDifference / 1000);
+  const milliseconds = timeDifference % 1000;
 
   // Extract hours, minutes, and seconds
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  if (subSeconds) {
-  }
 
   // Format hours, minutes, and seconds to be two digits
   const formattedHours = String(hours).padStart(2, "0");
   const formattedMinutes = String(minutes).padStart(2, "0");
   const formattedSeconds = String(seconds).padStart(2, "0");
 
-  // Return the formatted time string
+  if (subSeconds) {
+    const formattedMilliseconds = String(
+      Math.floor(milliseconds / 10)
+    ).padStart(2, "0");
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
+  }
+
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
