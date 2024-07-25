@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@deno/kv": "^0.8.1",
     "@ducanh2912/next-pwa": "^10.2.8",
-    "@vercel/kv": "^2.0.0",
     "next": "14.2.5",
     "next-auth": "beta",
     "random-words": "^2.0.1",

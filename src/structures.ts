@@ -23,4 +23,5 @@ export type Race = {
   meet: string;
   code: string;
   name: string;
+  startTime?: number;
 };

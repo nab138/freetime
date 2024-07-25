@@ -1,7 +1,8 @@
 "use server";
 
+import { getKv } from "@/kv";
 import { Athlete, MeetData, Race } from "@/structures";
-import { kv } from "@vercel/kv";
+
 import { generate } from "random-words";
 
 export async function addAthleteToMeetRoster(
@@ -12,41 +13,47 @@ export async function addAthleteToMeetRoster(
   gender: string,
   team: string
 ) {
-  let meet = await kv.get<MeetData>(code);
+  const kv = await getKv();
+  let meet = (await kv.get<MeetData>(["meets", code])).value;
   if (!meet) {
     return { error: "Failed to retrieve meet data." };
   }
   meet?.roster.push({ bib, name, age, gender, team });
-  await kv.set(code, meet);
+  await kv.set(["meets", code], meet);
 }
 
 export async function addAthletesToMeetRoster(
   meet: MeetData,
   athletes: Athlete[]
 ) {
+  const kv = await getKv();
   meet.roster = meet.roster.concat(athletes);
-  await kv.set(meet.code, meet);
+  await kv.set(["meets", meet.code], meet);
 }
 
 export async function clearRoster(meet: MeetData) {
+  const kv = await getKv();
   meet.roster = [];
-  await kv.set(meet.code, meet);
+  await kv.set(["meets", meet.code], meet);
 }
 
 export async function deleteMeet(code: string, adminCode: string) {
-  await kv.del(code);
-  await kv.del("admin-" + adminCode);
+  const kv = await getKv();
+  await kv.delete(["meets", code]);
+  await kv.delete(["admin", adminCode]);
 }
 
 export async function deleteStudentFromMeet(meet: MeetData, index: number) {
+  const kv = await getKv();
   meet.roster.splice(index, 1);
-  await kv.set(meet.code, meet);
+  await kv.set(["meets", meet.code], meet);
 }
 
 export async function createRace(name: string, meet: MeetData) {
+  const kv = await getKv();
   let code = generateCode();
   let iter = 0;
-  while ((await kv.exists("race-" + code)) > 1) {
+  while ((await kv.get(["race", code])).value !== null) {
     if (iter > 10) {
       return { error: "Failed to generate a unique code. Please try again." };
     }
@@ -60,8 +67,8 @@ export async function createRace(name: string, meet: MeetData) {
   };
   meet.races.push(code);
   await Promise.all([
-    kv.set("race-" + race.code, race),
-    kv.set(meet.code, meet),
+    kv.set(["race", race.code], race),
+    kv.set(["meets", meet.code], meet),
   ]);
 }
 

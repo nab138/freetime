@@ -1,21 +1,23 @@
 "use server";
 
+import { getKv } from "@/kv";
 import { MeetData, UserData } from "@/structures";
-import { kv } from "@vercel/kv";
+
 import { Session } from "next-auth";
 import { generate } from "random-words";
 
 export const createMeet = async (session: Session, name: string) => {
+  const kv = await getKv();
   if (!session.user || !session.user.email) {
     return;
   }
-  let userData = await kv.get<UserData>(session.user.email);
+  let userData = (await kv.get<UserData>(["users", session.user.email])).value;
   if (!userData) {
     userData = { email: session.user.email, meets: [] };
   }
   let code = generateCode();
   let iter = 0;
-  while ((await kv.exists(code)) > 1) {
+  while ((await kv.get<MeetData>(["meets", code])).value !== null) {
     if (iter > 10) {
       return { error: "Failed to generate a unique code. Please try again." };
     }
@@ -24,11 +26,11 @@ export const createMeet = async (session: Session, name: string) => {
   }
 
   userData.meets.push(code);
-  await kv.set(session.user.email, userData);
+  await kv.set(["users", session.user.email], userData);
 
   let adminCode = generateCode();
   iter = 0;
-  while ((await kv.exists("admin-" + adminCode)) > 1) {
+  while ((await kv.get(["admin", adminCode])).value !== null) {
     if (iter > 10) {
       return {
         error: "Failed to generate a unique admin code. Please try again.",
@@ -40,21 +42,22 @@ export const createMeet = async (session: Session, name: string) => {
 
   let meetData: MeetData = { code, name, roster: [], adminCode, races: [] };
   await Promise.all([
-    kv.set(code, meetData),
-    kv.set("admin-" + adminCode, code),
+    kv.set(["meets", code], meetData),
+    kv.set(["admin", adminCode], code),
   ]);
 };
 
 export const joinMeet = async (session: Session, code: string) => {
+  const kv = await getKv();
   if (!session.user || !session.user.email) {
     return;
   }
-  let userData = await kv.get<UserData>(session.user.email);
+  let userData = (await kv.get<UserData>(["users", session.user.email])).value;
   if (!userData) {
     userData = { email: session.user.email, meets: [] };
   }
 
-  let meetCode = await kv.get<string>("admin-" + code);
+  let meetCode = (await kv.get<string>(["admin", code])).value;
   if (!meetCode) {
     return { error: "Failed to find associated meet" };
   }
@@ -62,7 +65,7 @@ export const joinMeet = async (session: Session, code: string) => {
     return { warning: "You are already in this meet." };
   }
   userData.meets.push(meetCode);
-  await kv.set(session.user.email, userData);
+  await kv.set(["users", session.user.email], userData);
 };
 
 function generateCode() {

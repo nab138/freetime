@@ -4,12 +4,13 @@ import { auth } from "@/auth";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import { MeetData, Race, UserData } from "@/structures";
-import { kv } from "@vercel/kv";
+
 import { redirect } from "next/navigation";
 import RosterTable from "./RosterTable";
 import DeleteButton from "./DeleteButton";
 import RaceList from "./RaceList";
 import LinkButton from "@/components/LinkButton";
+import { getKv } from "@/kv";
 
 export default async function Meet({ params }: { params: { code: string } }) {
   let session = await auth();
@@ -17,14 +18,15 @@ export default async function Meet({ params }: { params: { code: string } }) {
     redirect("/");
   }
 
-  let data = await kv.get<UserData>(session.user.email);
+  const kv = await getKv();
+  let data = (await kv.get<UserData>(["users", session.user.email])).value;
   if (!data) {
     data = { email: session.user.email, meets: [] };
-    await kv.set(session.user.email, data);
+    await kv.set(["users", session.user.email], data);
   }
   let meet: MeetData | null = null;
   if (data.meets.includes(params.code)) {
-    meet = await kv.get<MeetData>(params.code);
+    meet = (await kv.get<MeetData>(["meets", params.code])).value;
   }
 
   if (!meet) {
@@ -39,7 +41,8 @@ export default async function Meet({ params }: { params: { code: string } }) {
 
   let races: Race[] = [];
   for (let race of meet.races) {
-    let raceData = await kv.get<Race>("race-" + race);
+    const kv = await getKv();
+    let raceData = (await kv.get<Race>(["race", race])).value;
     if (raceData) races.push(raceData);
   }
   return (

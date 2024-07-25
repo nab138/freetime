@@ -1,10 +1,11 @@
 "use server";
 
+import { getKv } from "@/kv";
 import { MeetData } from "@/structures";
-import { kv } from "@vercel/kv";
 
 export async function deleteRace(code: string, meet: MeetData) {
-  await kv.del("race-" + code);
+  const kv = await getKv();
+  await kv.delete(["race", code]);
   meet.races.filter((r) => r !== code);
-  await kv.set(meet.code, meet);
+  await kv.set(["meets", meet.code], meet);
 }

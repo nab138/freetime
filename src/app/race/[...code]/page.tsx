@@ -1,6 +1,5 @@
 import Card from "@/components/Card";
 import { MeetData, Race } from "@/structures";
-import { kv } from "@vercel/kv";
 
 import styles from "./race.module.css";
 import { redirect } from "next/navigation";
@@ -9,6 +8,7 @@ import RaceDeleteButton from "./RaceDeleteButton";
 import ClientButton from "@/components/ClientButton";
 import LinkButton from "@/components/LinkButton";
 import Timing from "./Timing";
+import { getKv } from "@/kv";
 
 export default async function RacePage({
   params,
@@ -24,9 +24,10 @@ export default async function RacePage({
       </main>
     );
   }
+  const kv = await getKv();
   let meetCode = params.code[0];
   let raceCode = params.code[1];
-  let meet = await kv.get<MeetData>(meetCode);
+  let meet = (await kv.get<MeetData>(["meets", meetCode])).value;
   if (!meet) {
     return (
       <main>
@@ -41,7 +42,7 @@ export default async function RacePage({
       </main>
     );
   }
-  let race = await kv.get<Race>("race-" + raceCode);
+  let race = (await kv.get<Race>(["race", raceCode])).value;
   if (!race) {
     return (
       <main>
@@ -59,7 +60,7 @@ export default async function RacePage({
             <LinkButton href={`/race/${meetCode}/${raceCode}`}>
               Back to race
             </LinkButton>
-            <Timing />
+            <Timing raceCode={raceCode} />
           </div>
         </main>
       );

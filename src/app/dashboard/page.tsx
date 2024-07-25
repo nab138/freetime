@@ -2,28 +2,27 @@ import Button from "@/components/Button";
 import styles from "./dashboard.module.css";
 import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
-import { kv } from "@vercel/kv";
 import { MeetData, UserData } from "@/structures";
 import Card from "@/components/Card";
-import { createMeet, joinMeet } from "./actions";
-import { FormEvent } from "react";
 import MeetsCard from "./meetsCard";
+import { getKv } from "@/kv";
 
 export default async function Home() {
+  const kv = await getKv();
   let session = await auth();
   if (!session || !session.user || !session.user.email) {
     redirect("/");
   }
 
-  let data = await kv.get<UserData>(session.user.email);
+  let data = (await kv.get<UserData>(["users", session.user.email])).value;
   let validMeetCodes = data?.meets ?? [];
   let meets: MeetData[] = [];
   if (!data) {
     data = { email: session.user.email, meets: [] };
-    await kv.set(session.user.email, data);
+    await kv.set(["users", session.user.email], data);
   }
   for (let code of data.meets) {
-    let meet = await kv.get<MeetData>(code);
+    let meet = (await kv.get<MeetData>(["meets", code])).value;
     if (meet) {
       meets.push(meet);
     } else {
@@ -32,7 +31,7 @@ export default async function Home() {
   }
   if (validMeetCodes.length !== data.meets.length) {
     data.meets = validMeetCodes;
-    await kv.set(session.user.email, data);
+    await kv.set(["users", session.user.email], data);
   }
 
   return (
