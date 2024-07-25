@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 import RaceDeleteButton from "./RaceDeleteButton";
 import ClientButton from "@/components/ClientButton";
 import LinkButton from "@/components/LinkButton";
+import Timing from "./Timing";
 
 export default async function RacePage({
   params,
@@ -58,6 +59,7 @@ export default async function RacePage({
             <LinkButton href={`/race/${meetCode}/${raceCode}`}>
               Back to race
             </LinkButton>
+            <Timing />
           </div>
         </main>
       );

@@ -37,7 +37,7 @@
 .delete {
   cursor: pointer;
   padding: 4px;
-  background-color: #e8554a;
+  background-color: var(--danger);
   color: white;
   margin-right: 10px;
 }
