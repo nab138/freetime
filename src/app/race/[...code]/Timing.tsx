@@ -41,7 +41,7 @@ export default function Timing({ raceCode }: { raceCode: string }) {
           </ClientButton>
           <ClientButton
             onClick={() =>
-              alert("Why would you stop a race you haven't started, dunce?")
+              alert("Why would you stop a race you haven't started?")
             }
             style={{ color: "white", backgroundColor: "var(--danger)" }}
           >
