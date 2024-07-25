@@ -8,8 +8,15 @@ import { useEffect, useState } from "react";
 
 import { getBibs, getStartTime, setServerBibs, setTimes } from "./actions";
 import { toast } from "sonner";
+import { Athlete } from "@/structures";
 
-export default function Bibs({ raceCode }: { raceCode: string }) {
+export default function Bibs({
+  raceCode,
+  roster,
+}: {
+  raceCode: string;
+  roster: Athlete[];
+}) {
   const [loaded, setLoaded] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -72,6 +79,14 @@ export default function Bibs({ raceCode }: { raceCode: string }) {
                 return;
               }
               let currentBibs = await getBibs(raceCode);
+              if (currentBibs.includes(bib)) {
+                toast.warning("Bib already marked as finished.");
+                return;
+              }
+              if (!roster.find((a) => a.bib === bib)) {
+                toast.warning("Bib not found in roster.");
+                return;
+              }
               currentBibs.push(bib);
               await setServerBibs(raceCode, currentBibs);
               setBibs(currentBibs);
