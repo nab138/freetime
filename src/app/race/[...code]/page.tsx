@@ -107,10 +107,10 @@ export default async function RacePage({
           <h2>Timing</h2>
           <div className={styles.buttons}>
             <LinkButton href={`/race/${meetCode}/${raceCode}/timer`}>
-              I'm a timer
+              I&apos;m a timer
             </LinkButton>
             <LinkButton href={`/race/${meetCode}/${raceCode}/bibs`}>
-              I'm a bib reader
+              I&apos;m a bib reader
             </LinkButton>
           </div>
         </Card>
