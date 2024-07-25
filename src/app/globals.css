@@ -113,6 +113,9 @@ h1 {
 h2 {
   color: rgb(var(--foreground-secondary-rgb));
 }
+h3 {
+  color: rgb(var(--foreground-secondary-rgb));
+}
 
 main {
   display: flex;

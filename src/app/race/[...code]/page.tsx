@@ -6,6 +6,8 @@ import styles from "./race.module.css";
 import { redirect } from "next/navigation";
 import Button from "@/components/Button";
 import RaceDeleteButton from "./RaceDeleteButton";
+import ClientButton from "@/components/ClientButton";
+import LinkButton from "@/components/LinkButton";
 
 export default async function RacePage({
   params,
@@ -14,7 +16,7 @@ export default async function RacePage({
     code: string[];
   };
 }) {
-  if (params.code.length !== 2) {
+  if (params.code.length !== 2 && params.code.length !== 3) {
     return (
       <main>
         <h1>Invalid URL.</h1>
@@ -46,18 +48,44 @@ export default async function RacePage({
       </main>
     );
   }
+  if (params.code.length === 3) {
+    if (params.code[2] === "timer") {
+      return (
+        <main>
+          <div className={"header"}>
+            <h1>{race.name} - Timing</h1>
+            <h3>{meet.name}</h3>
+            <LinkButton href={`/race/${meetCode}/${raceCode}`}>
+              Back to race
+            </LinkButton>
+          </div>
+        </main>
+      );
+    } else if (params.code[2] === "bibs") {
+      return (
+        <main>
+          <div className={"header"}>
+            <h1>{race.name} - Bibs</h1>
+            <h3>{meet.name}</h3>
+            <LinkButton href={`/race/${meetCode}/${raceCode}`}>
+              Back to race
+            </LinkButton>
+          </div>
+        </main>
+      );
+    } else {
+      return (
+        <main>
+          <h1>Invalid URL.</h1>
+        </main>
+      );
+    }
+  }
   return (
     <main>
       <div className={"header"}>
         <h1>{race.name}</h1>
-        <form
-          action={async () => {
-            "use server";
-            redirect("/meet/" + meetCode);
-          }}
-        >
-          <Button type="submit">Back to meet</Button>
-        </form>
+        <LinkButton href={`/meet/${meetCode}`}>Return to meet</LinkButton>
       </div>
       <div className={"content"}>
         <Card>
@@ -65,10 +93,28 @@ export default async function RacePage({
           <p>
             <strong>Name:</strong> {race.name}
           </p>
+          <p>
+            <strong>Meet:</strong> {meet.name}
+          </p>
           <p style={{ marginBottom: "10px" }}>
             <strong>Race Code:</strong> {race.code}
           </p>
           <RaceDeleteButton meet={meet} raceCode={race.code} />
+        </Card>
+        <Card>
+          <h2>Timing</h2>
+          <div className={styles.buttons}>
+            <LinkButton href={`/race/${meetCode}/${raceCode}/timer`}>
+              I'm a timer
+            </LinkButton>
+            <LinkButton href={`/race/${meetCode}/${raceCode}/bibs`}>
+              I'm a bib reader
+            </LinkButton>
+          </div>
+        </Card>
+        <Card>
+          <h2>Results</h2>
+          <p>Coming Soon</p>
         </Card>
       </div>
     </main>

@@ -4,7 +4,6 @@ import ClientButton from "@/components/ClientButton";
 import styles from "./race.module.css";
 import { MeetData } from "@/structures";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { deleteRace } from "./actions";
 
 export default function DeleteButton({
@@ -44,13 +43,9 @@ export default function DeleteButton({
                 color: "white",
               }}
               onClick={async () => {
-                let result = await deleteRace(raceCode, meet);
-                if (result && result.error) {
-                  toast.error(result.error);
-                } else {
-                  router.push("/meet/" + meet.code);
-                  router.refresh();
-                }
+                await deleteRace(raceCode, meet);
+                router.push("/meet/" + meet.code);
+                router.refresh();
               }}
             >
               Delete

@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import RosterTable from "./RosterTable";
 import DeleteButton from "./DeleteButton";
 import RaceList from "./RaceList";
+import LinkButton from "@/components/LinkButton";
 
 export default async function Meet({ params }: { params: { code: string } }) {
   let session = await auth();
@@ -31,35 +32,21 @@ export default async function Meet({ params }: { params: { code: string } }) {
       <main>
         <h1>Unkown meet</h1>
         <p>Meet not found, or you do not have access!</p>
-        <form
-          action={async () => {
-            "use server";
-            redirect("/dashboard");
-          }}
-        >
-          <Button type="submit">Return to dashboard</Button>
-        </form>
+        <LinkButton href="/dashboard">Return to dashboard</LinkButton>
       </main>
     );
   }
 
   let races: Race[] = [];
   for (let race of meet.races) {
-    if ((await kv.exists("race-" + race)) !== 0)
-      races.push((await kv.get("race-" + race)) as Race);
+    let raceData = await kv.get<Race>("race-" + race);
+    if (raceData) races.push(raceData);
   }
   return (
     <main>
       <div className={"header"}>
         <h1>{meet.name}</h1>
-        <form
-          action={async () => {
-            "use server";
-            redirect("/dashboard");
-          }}
-        >
-          <Button type="submit">Back to dashboard</Button>
-        </form>
+        <LinkButton href="/dashboard">Return to dashboard</LinkButton>
       </div>
       <div className={"content"}>
         <Card>

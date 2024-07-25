@@ -174,8 +174,8 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
           accept=".csv"
           onChange={handleFileSelect}
         />
-        <div className={styles.modalContainer} id="clearModal">
-          <div className={styles.modal}>
+        <div className={"modalContainer"} id="clearModal">
+          <div className={"modal"}>
             <h2 style={{ color: "#e8554a" }}>Are you sure?</h2>
             <p style={{ marginTop: "10px", marginBottom: "20px" }}>
               Clearing your roster is an irreversable, destructive action.

@@ -4,7 +4,6 @@ import styles from "./meet.module.css";
 import { MeetData } from "@/structures";
 import { deleteMeet } from "./actions";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 export default function DeleteButton({ meet }: { meet: MeetData }) {
   const router = useRouter();
