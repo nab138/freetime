@@ -30,9 +30,3 @@
 .meets ul li {
   padding: 4px 0;
 }
-
-@media screen and (max-width: 750px) {
-  .content {
-    flex-direction: column;
-  }
-}

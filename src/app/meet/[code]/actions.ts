@@ -57,8 +57,6 @@ export async function createRace(name: string, meet: MeetData) {
     meet: meet.code,
     code,
     name,
-    bibs: [],
-    times: [],
   };
   meet.races.push(code);
   await Promise.all([

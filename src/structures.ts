@@ -23,12 +23,4 @@ export type Race = {
   meet: string;
   code: string;
   name: string;
-  bibs: number[];
-  times: number[];
-};
-
-export type BackupRace = {
-  code: string;
-  bibs: number[];
-  times: number[];
 };
