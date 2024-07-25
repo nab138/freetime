@@ -38,7 +38,7 @@ export default async function Home() {
   return (
     <main>
       <h1>FreeTime Dashboard</h1>
-      <div className={styles.content}>
+      <div className={"content"}>
         <Card className={styles.account}>
           <h2>Account</h2>
           <div className={styles.accountDetails}>
