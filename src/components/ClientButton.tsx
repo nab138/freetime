@@ -8,12 +8,14 @@ export default function ClientButton({
   type = "button",
   style = {},
   className = "",
+  disabled = false,
 }: Readonly<{
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
   style?: React.CSSProperties;
   className?: string;
   onClick: () => void;
+  disabled?: boolean;
 }>) {
   return (
     <button
@@ -21,6 +23,7 @@ export default function ClientButton({
       type={type}
       onClick={onClick}
       style={style}
+      disabled={disabled}
     >
       {children}
     </button>

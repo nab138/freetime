@@ -8,3 +8,9 @@
   cursor: pointer;
   font-size: small;
 }
+
+/* Disabled Styles*/
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
