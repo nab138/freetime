@@ -38,7 +38,7 @@ export const createMeet = async (session: Session, name: string) => {
     iter++;
   }
 
-  let meetData: MeetData = { code, name, roster: [], adminCode };
+  let meetData: MeetData = { code, name, roster: [], adminCode, races: [] };
   await Promise.all([
     kv.set(code, meetData),
     kv.set("admin-" + adminCode, code),
@@ -54,12 +54,9 @@ export const joinMeet = async (session: Session, code: string) => {
     userData = { email: session.user.email, meets: [] };
   }
 
-  if ((await kv.exists("admin-" + code)) === 0) {
-    return { error: "Invalid admin code." };
-  }
   let meetCode = await kv.get<string>("admin-" + code);
   if (!meetCode) {
-    return { error: "Found admin code, but failed to get meet code." };
+    return { error: "Failed to find associated meet" };
   }
   if (userData.meets.includes(meetCode)) {
     return { warning: "You are already in this meet." };

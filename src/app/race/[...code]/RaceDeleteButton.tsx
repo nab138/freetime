@@ -1,12 +1,19 @@
 "use client";
+
 import ClientButton from "@/components/ClientButton";
-import styles from "./meet.module.css";
+import styles from "./race.module.css";
 import { MeetData } from "@/structures";
-import { deleteMeet } from "./actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { deleteRace } from "./actions";
 
-export default function DeleteButton({ meet }: { meet: MeetData }) {
+export default function DeleteButton({
+  meet,
+  raceCode,
+}: {
+  meet: MeetData;
+  raceCode: string;
+}) {
   const router = useRouter();
   return (
     <div>
@@ -28,18 +35,22 @@ export default function DeleteButton({ meet }: { meet: MeetData }) {
         <div className={"modal"}>
           <h2 style={{ color: "#e8554a" }}>Are you sure?</h2>
           <p style={{ marginTop: "10px", marginBottom: "20px" }}>
-            Deleting your meet is an irreversable, destructive action.
+            Deleting your race is an irreversable, destructive action.
           </p>
-          <div className={styles.rosterButtons}>
+          <div className={styles.buttons}>
             <ClientButton
               style={{
                 backgroundColor: "#e8554a",
                 color: "white",
               }}
               onClick={async () => {
-                await deleteMeet(meet.code, meet.adminCode);
-                router.push("/dashboard");
-                router.refresh();
+                let result = await deleteRace(raceCode, meet);
+                if (result && result.error) {
+                  toast.error(result.error);
+                } else {
+                  router.push("/meet/" + meet.code);
+                  router.refresh();
+                }
               }}
             >
               Delete

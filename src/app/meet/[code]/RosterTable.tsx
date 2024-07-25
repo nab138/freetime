@@ -40,12 +40,8 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
           }
         }
         (async () => {
-          let result = await addAthletesToMeetRoster(meet.code, athletes);
-          if (result && result.error) {
-            toast.error(result.error);
-          } else {
-            window.location.reload();
-          }
+          await addAthletesToMeetRoster(meet, athletes);
+          window.location.reload();
         })();
       });
     }
@@ -191,12 +187,8 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
                   color: "white",
                 }}
                 onClick={async () => {
-                  let result = await clearRoster(meet.code);
-                  if (result && result.error) {
-                    toast.error(result.error);
-                  } else {
-                    window.location.reload();
-                  }
+                  await clearRoster(meet);
+                  window.location.reload();
                 }}
               >
                 Delete

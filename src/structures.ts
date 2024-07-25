@@ -8,6 +8,7 @@ export type MeetData = {
   adminCode: string;
   name: string;
   roster: Athlete[];
+  races: string[];
 };
 
 export type Athlete = {
@@ -16,4 +17,18 @@ export type Athlete = {
   age: number;
   gender: string;
   team: string;
+};
+
+export type Race = {
+  meet: string;
+  code: string;
+  name: string;
+  bibs: number[];
+  times: number[];
+};
+
+export type BackupRace = {
+  code: string;
+  bibs: number[];
+  times: number[];
 };
