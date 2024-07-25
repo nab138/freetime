@@ -35,3 +35,13 @@ export async function setTimes(code: string, times: number[]) {
   const kv = await getKv();
   await kv.set(["times", code], times);
 }
+
+export async function getBibs(code: string) {
+  const kv = await getKv();
+  return (await kv.get<number[]>(["bibs", code])).value ?? [];
+}
+
+export async function setServerBibs(code: string, bibs: number[]) {
+  const kv = await getKv();
+  await kv.set(["bibs", code], bibs);
+}
