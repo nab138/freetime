@@ -22,6 +22,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column-reverse;
+  touch-action: pan-x pan-y;
 }
 
 .deleteBtn {
