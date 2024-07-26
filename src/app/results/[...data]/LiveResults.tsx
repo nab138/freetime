@@ -1,7 +1,7 @@
 "use client";
 
 import Card from "@/components/Card";
-import styles from "../../race/[...code]/race.module.css";
+import styles from "./results.module.css";
 import { useEffect, useState } from "react";
 import { getBibs, getMeet, getRace, getTimes } from "./actions";
 import { Athlete } from "@/structures";
@@ -36,7 +36,7 @@ export default function LiveResults({
     setInterval(update, 30000);
   }, []);
   return (
-    <Card>
+    <Card style={{ flexGrow: 1 }}>
       <h2>
         Live Results -{" "}
         <span style={{ color: "var(--danger)" }}>Results are NOT final!</span>
@@ -45,11 +45,8 @@ export default function LiveResults({
         <p>This race has not started yet.</p>
       )}
       {startTime !== undefined && startTime !== null && (
-        <div
-          className={styles.finishersTableContainer}
-          style={{ maxHeight: "80vh" }}
-        >
-          <table className={styles.finishersTable} style={{ minWidth: "80vw" }}>
+        <div className={styles.resultsTableContainer}>
+          <table className={styles.resultsTable}>
             <thead>
               <tr>
                 <th>Place</th>

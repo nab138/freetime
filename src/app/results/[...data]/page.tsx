@@ -39,13 +39,22 @@ export default async function Results({
     }
     return (
       <main>
-        <div style={{ textAlign: "center" }}>
-          <h1>
-            {meet.name} - {race.name}
-          </h1>
-          <h3>FreeTime - Flusche & Sharp Timing</h3>
+        <div
+          style={{
+            display: "flex",
+            gap: "25px",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <h1>
+              {meet.name} - {race.name}
+            </h1>
+            <h3>FreeTime - Flusche & Sharp Timing</h3>
+          </div>
+          <LiveResults meetCode={meet.code} raceCode={race.code} />
         </div>
-        <LiveResults meetCode={meet.code} raceCode={race.code} />
       </main>
     );
   }

@@ -6,6 +6,7 @@ import { MeetData, UserData } from "@/structures";
 import Card from "@/components/Card";
 import MeetsCard from "./meetsCard";
 import { getKv } from "@/kv";
+import Link from "next/link";
 
 export default async function Home() {
   const kv = await getKv();
@@ -33,6 +34,12 @@ export default async function Home() {
     data.meets = validMeetCodes;
     await kv.set(["users", session.user.email], data);
   }
+
+  let activeMeetCodes = (await kv.get<string[]>(["activeMeets"])).value ?? [];
+  let activeMeetNames = activeMeetCodes.map(async (code) => {
+    const meet = await kv.get<MeetData>(["meets", code]);
+    return meet.value?.name;
+  });
 
   return (
     <main>
@@ -70,6 +77,22 @@ export default async function Home() {
           >
             <Button type="submit">Sign Out</Button>
           </form>
+        </Card>
+        <Card>
+          <h3>Live Results</h3>
+          {activeMeetCodes.length > 0 ? (
+            <ul style={{ listStyle: "none", textDecoration: "underline" }}>
+              {activeMeetNames.map((name, i) => {
+                return (
+                  <li key={activeMeetCodes[i]}>
+                    <Link href={"/results/" + activeMeetCodes[i]}>{name}</Link>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p>No active meets today.</p>
+          )}
         </Card>
         <MeetsCard session={session} data={data} meets={meets} />
       </div>

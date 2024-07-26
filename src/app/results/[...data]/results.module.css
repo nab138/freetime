@@ -1,0 +1,42 @@
+.resultsTable,
+.resultsTable td {
+  border: 2px solid rgb(var(--card-border-rgb));
+  border-collapse: collapse;
+  padding: 5px;
+}
+
+.resultsTable th {
+  box-shadow: inset -1px 0 rgb(var(--card-border-rgb)),
+    inset 1px 0 rgb(var(--card-border-rgb));
+  padding: 5px;
+}
+
+.resultsTable thead {
+  position: sticky;
+  top: -1px;
+  background-color: rgb(var(--card-rgb));
+  box-shadow: inset 0 2px rgb(var(--card-border-rgb)),
+    inset 0 -2px 0 rgb(var(--card-border-rgb));
+}
+.resultsTable {
+  width: 100%;
+  max-height: 50vh;
+  min-width: 80vw;
+}
+
+.resultsTableContainer {
+  margin-top: 15px;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  overflow-x: auto;
+  display: flex;
+  touch-action: auto;
+  flex-direction: column-reverse;
+  max-width: 87vw;
+}
+
+@media screen and (max-width: 750px) {
+  .resultsTableContainer {
+    max-height: calc(100vh - 225px);
+  }
+}
