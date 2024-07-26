@@ -36,7 +36,7 @@ export default function DeleteButton({ meet }: { meet: MeetData }) {
                 color: "white",
               }}
               onClick={async () => {
-                await deleteMeet(meet.code, meet.adminCode);
+                await deleteMeet(meet);
                 router.push("/dashboard");
                 router.refresh();
               }}

@@ -1,5 +1,5 @@
 import Card from "@/components/Card";
-import { MeetData, Race } from "@/structures";
+import { MeetData, Race, UserData } from "@/structures";
 
 import styles from "./race.module.css";
 import RaceDeleteButton from "./RaceDeleteButton";
@@ -7,6 +7,8 @@ import LinkButton from "@/components/LinkButton";
 import Timing from "./Timing";
 import { getKv } from "@/kv";
 import Bibs from "./Bibs";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function RacePage({
   params,
@@ -22,15 +24,30 @@ export default async function RacePage({
       </main>
     );
   }
+  let session = await auth();
+  if (!session || !session.user || !session.user.email) {
+    redirect("/");
+  }
   const kv = await getKv();
+  let data = (await kv.get<UserData>(["users", session.user.email])).value;
+  if (!data) {
+    data = { email: session.user.email, meets: [] };
+    await kv.set(["users", session.user.email], data);
+  }
+
   let meetCode = params.code[0];
   let raceCode = params.code[1];
-  let meet = (await kv.get<MeetData>(["meets", meetCode])).value;
+  let meet: MeetData | null = null;
+  if (data.meets.includes(meetCode)) {
+    meet = (await kv.get<MeetData>(["meets", meetCode])).value;
+  }
 
   if (!meet) {
     return (
       <main>
-        <h1>Failed to retrieve meet data.</h1>
+        <h1>Unkown meet</h1>
+        <p>Meet not found, or you do not have access!</p>
+        <LinkButton href="/dashboard">Return to dashboard</LinkButton>
       </main>
     );
   }

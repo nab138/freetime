@@ -37,10 +37,15 @@ export async function clearRoster(meet: MeetData) {
   await kv.set(["meets", meet.code], meet);
 }
 
-export async function deleteMeet(code: string, adminCode: string) {
+export async function deleteMeet(meet: MeetData) {
   const kv = await getKv();
-  await kv.delete(["meets", code]);
-  await kv.delete(["admin", adminCode]);
+  await kv.delete(["meets", meet.code]);
+  await kv.delete(["admin", meet.adminCode]);
+  for (let race of meet.races) {
+    await kv.delete(["race", race]);
+    await kv.delete(["bibs", race]);
+    await kv.delete(["times", race]);
+  }
 }
 
 export async function deleteStudentFromMeet(meet: MeetData, index: number) {

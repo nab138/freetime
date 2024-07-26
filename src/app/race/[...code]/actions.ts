@@ -6,6 +6,8 @@ import { MeetData, Race } from "@/structures";
 export async function deleteRace(code: string, meet: MeetData) {
   const kv = await getKv();
   await kv.delete(["race", code]);
+  await kv.delete(["bibs", code]);
+  await kv.delete(["times", code]);
   meet.races.filter((r) => r !== code);
   await kv.set(["meets", meet.code], meet);
 }
