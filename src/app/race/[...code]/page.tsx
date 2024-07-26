@@ -9,6 +9,7 @@ import { getKv } from "@/kv";
 import Bibs from "./Bibs";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import ResultsPrinter from "./ResultsPrinter";
 
 export default async function RacePage({
   params,
@@ -139,40 +140,50 @@ export default async function RacePage({
         </Card>
         <Card>
           <h2>Results</h2>
+
           {(bibs === null || times === null) && <p>No results yet.</p>}
           {bibs !== null && times !== null && (
-            <div className={styles.finishersTableContainer}>
-              <table className={styles.finishersTable}>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Bib</th>
-                    <th>Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bibs.map((bib, index) => (
-                    <tr key={index}>
-                      <td>
-                        {roster.find((a) => a.bib === bib)?.name ??
-                          "Unkown Runner"}
-                      </td>
-                      <td>{bib}</td>
-                      <td>
-                        {times.length <= index &&
-                        race.startTime !== undefined &&
-                        race.startTime !== null
-                          ? "N/A"
-                          : formatTimeDifference(
-                              new Date(race.startTime as number),
-                              new Date(times[index])
-                            )}
-                      </td>
+            <>
+              <ResultsPrinter
+                race={race}
+                meet={meet}
+                bibs={bibs}
+                times={times}
+              />
+              <div className={styles.finishersTableContainer}>
+                <table className={styles.finishersTable}>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Bib</th>
+                      <th>Time</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {bibs.map((bib, index) => (
+                      <tr key={index}>
+                        <td>
+                          {roster.find((a) => a.bib === bib)?.name ??
+                            "Unkown Runner"}
+                        </td>
+                        <td>{bib}</td>
+                        <td>
+                          {times.length <= index &&
+                          race.startTime !== undefined &&
+                          race.startTime !== null
+                            ? "N/A"
+                            : formatTimeDifference(
+                                new Date(race.startTime as number),
+                                new Date(times[index]),
+                                true
+                              )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </Card>
       </div>

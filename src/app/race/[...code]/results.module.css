@@ -1,0 +1,30 @@
+.body {
+  text-align: center;
+  font-family: verdana;
+  color: black;
+  width: 100%;
+}
+.thead {
+  border-bottom: 2px solid rgb(59, 59, 59);
+  text-align: left;
+}
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.tbody {
+  text-align: left;
+
+  width: 100%;
+}
+.header {
+  border-bottom: 2px solid rgb(59, 59, 59);
+  border-top: 2px solid rgb(59, 59, 59);
+  margin: 10px 0;
+}
+.h4 {
+  margin: 1px;
+}
+.sectionHeader {
+  text-align: left;
+}
