@@ -87,9 +87,12 @@ export default function Bibs({
                 toast.warning("Bib not found in roster.");
                 return;
               }
+
+              bibRaw.value = "";
               currentBibs.push(bib);
               await setServerBibs(raceCode, currentBibs);
               setBibs(currentBibs);
+              bibRaw.focus();
             }}
             style={{
               flexGrow: 1,
