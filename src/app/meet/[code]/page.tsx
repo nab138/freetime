@@ -1,7 +1,6 @@
 import styles from "./meet.module.css";
 
 import { auth } from "@/auth";
-import Button from "@/components/Button";
 import Card from "@/components/Card";
 import { MeetData, Race, UserData } from "@/structures";
 
@@ -11,6 +10,7 @@ import DeleteButton from "./DeleteButton";
 import RaceList from "./RaceList";
 import LinkButton from "@/components/LinkButton";
 import { getKv } from "@/kv";
+import Button from "@/components/Button";
 
 export default async function Meet({ params }: { params: { code: string } }) {
   let session = await auth();
@@ -28,6 +28,13 @@ export default async function Meet({ params }: { params: { code: string } }) {
   if (data.meets.includes(params.code)) {
     meet = (await kv.get<MeetData>(["meets", params.code])).value;
   }
+  let activeMeets: string[] | null = (await kv.get<string[]>(["activeMeets"]))
+    .value;
+  if (!activeMeets) {
+    activeMeets = [];
+    await kv.set(["activeMeets"], activeMeets);
+  }
+  let isActive = activeMeets.includes(params.code);
 
   if (!meet) {
     return (
@@ -60,10 +67,34 @@ export default async function Meet({ params }: { params: { code: string } }) {
           <p>
             <strong>Meet Code:</strong> {meet.code}
           </p>
+          <p>
+            <strong>Active: </strong> {isActive ? "Yes" : "No"}
+          </p>
           <p style={{ marginBottom: "10px" }}>
             <strong>Admin Code:</strong> {meet.adminCode}
           </p>
-          <DeleteButton meet={meet} />
+          <form
+            action={async () => {
+              "use server";
+              const db = await getKv();
+              let actives: string[] =
+                (await db.get<string[]>(["activeMeets"])).value ?? [];
+              if (isActive) {
+                actives = actives.filter((m) => m !== meet.code);
+                await db.set(["activeMeets"], actives);
+              } else {
+                actives.push(meet.code);
+                await db.set(["activeMeets"], actives);
+              }
+              redirect(`/meet/${meet.code}`);
+            }}
+            style={{ display: "flex", gap: "10px" }}
+          >
+            <Button type="submit">
+              {isActive ? "Deactivate" : "Activate"}
+            </Button>
+            <DeleteButton meet={meet} />
+          </form>
         </Card>
         <Card className={styles.roster}>
           <h2>Roster</h2>
