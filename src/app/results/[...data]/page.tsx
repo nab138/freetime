@@ -3,6 +3,7 @@ import { getKv } from "@/kv";
 import { MeetData, Race } from "@/structures";
 import Link from "next/link";
 import LiveResults from "./LiveResults";
+import LinkButton from "@/components/LinkButton";
 
 export default async function Results({
   params,
@@ -51,7 +52,10 @@ export default async function Results({
             <h1>
               {meet.name} - {race.name}
             </h1>
-            <h3>FreeTime - Flusche & Sharp Timing</h3>
+            <h3 style={{ marginBottom: "10px" }}>
+              FreeTime - Flusche & Sharp Timing
+            </h3>
+            <LinkButton href={"/results/" + meetCode}>Back to meet</LinkButton>
           </div>
           <LiveResults meetCode={meet.code} raceCode={race.code} />
         </div>
@@ -63,7 +67,10 @@ export default async function Results({
     <main>
       <div style={{ textAlign: "center" }}>
         <h1>{meet.name}</h1>
-        <h3>FreeTime - Flusche & Sharp Timing</h3>
+        <h3 style={{ marginBottom: "10px" }}>
+          FreeTime - Flusche & Sharp Timing
+        </h3>
+        <LinkButton href={"/"}>Back to home</LinkButton>
       </div>
       <Card>
         <h2>Races:</h2>

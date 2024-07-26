@@ -15,8 +15,10 @@
   position: sticky;
   top: -1px;
   background-color: rgb(var(--card-rgb));
-  box-shadow: inset 0 2px rgb(var(--card-border-rgb)),
-    inset 0 -2px 0 rgb(var(--card-border-rgb));
+  -webkit-filter: drop-shadow(0 2px rgb(var(--card-border-rgb)))
+    drop-shadow(0 2px rgb(var(--card-border-rgb)));
+  filter: drop-shadow(0 2px rgb(var(--card-border-rgb)))
+    drop-shadow(0 2px rgb(var(--card-border-rgb)));
 }
 .resultsTable {
   width: 100%;
@@ -26,17 +28,20 @@
 
 .resultsTableContainer {
   margin-top: 15px;
-  max-height: calc(100vh - 250px);
+  max-height: calc(100vh - 300px);
   overflow-y: auto;
   overflow-x: auto;
-  display: flex;
-  touch-action: auto;
-  flex-direction: column-reverse;
   max-width: 87vw;
 }
 
 @media screen and (max-width: 750px) {
   .resultsTableContainer {
-    max-height: calc(100vh - 225px);
+    max-height: calc(100vh - 260px);
   }
+}
+
+/* On ios only */
+
+.resultsTableContainer {
+  border-top: 2px solid rgb(var(--card-border-rgb));
 }
