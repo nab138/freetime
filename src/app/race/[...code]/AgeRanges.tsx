@@ -12,11 +12,13 @@ export default function AgeRanges({
   race,
   bibs,
   times,
+  distance,
 }: {
   meet: MeetData;
   race: Race;
   bibs: number[];
   times: number[];
+  distance: number;
 }) {
   const [ageRanges, setAgeRangesState] = useState<AgeRange[] | null>(null);
 
@@ -90,6 +92,7 @@ export default function AgeRanges({
         race={race}
         bibs={bibs}
         times={times}
+        distance={distance}
       />
     </div>
   );

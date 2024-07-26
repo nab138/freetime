@@ -13,12 +13,14 @@ export default function ResultsPrinter({
   race,
   bibs,
   times,
+  distance,
   ageRanges = null,
 }: {
   meet: MeetData;
   race: Race;
   bibs: number[];
   times: number[];
+  distance: number;
   ageRanges?: AgeRange[] | null;
 }) {
   const [isClient, setIsClient] = useState(false);
@@ -163,22 +165,22 @@ export default function ResultsPrinter({
                       <h4 className={styles.sectionHeader}>{group.name}</h4>
                     </td>
                   </tr>
-                  {group.data.map((athlete, index) => (
-                    <tr key={index}>
-                      <td>{athlete.place}</td>
-                      <td>{athlete.name}</td>
-                      <td>{athlete.age}</td>
-                      <td>{athlete.bib}</td>
-                      <td>Todo</td>
-                      <td>
-                        {formatTimeDifference(
-                          new Date(race.startTime ?? -1),
-                          new Date(athlete.time),
-                          true
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                  {group.data.map((athlete, index) => {
+                    let timeDifference = athlete.time - (race.startTime ?? -1);
+
+                    return (
+                      <tr key={index}>
+                        <td>{athlete.place}</td>
+                        <td>{athlete.name}</td>
+                        <td>{athlete.age}</td>
+                        <td>{athlete.bib}</td>
+                        <td>
+                          {formatTime(timeDifference / distance, false, true)}
+                        </td>
+                        <td>{formatTime(timeDifference, true)}</td>
+                      </tr>
+                    );
+                  })}
                 </>
               ))}
             </tbody>
@@ -189,15 +191,13 @@ export default function ResultsPrinter({
   );
 }
 
-function formatTimeDifference(
-  startTime: Date,
-  currentTime: Date,
-  subSeconds: boolean = false
+function formatTime(
+  time: number,
+  subSeconds: boolean = false,
+  hideZero: boolean = false
 ): string {
-  const timeDifference = currentTime.getTime() - startTime.getTime();
-
-  const totalSeconds = Math.floor(timeDifference / 1000);
-  const milliseconds = timeDifference % 1000;
+  const totalSeconds = Math.floor(time / 1000);
+  const milliseconds = time % 1000;
 
   // Extract hours, minutes, and seconds
   const hours = Math.floor(totalSeconds / 3600);
@@ -213,10 +213,14 @@ function formatTimeDifference(
     const formattedMilliseconds = String(
       Math.floor(milliseconds / 10)
     ).padStart(2, "0");
-    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
+    return `${
+      hours !== 0 || !hideZero ? formattedHours + ":" : ""
+    }${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
   }
 
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  return `${
+    hours !== 0 || !hideZero ? formattedHours + ":" : ""
+  }${formattedMinutes}:${formattedSeconds}`;
 }
 
 const marginTop = "0.25in";

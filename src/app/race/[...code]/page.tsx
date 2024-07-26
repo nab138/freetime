@@ -11,6 +11,9 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import ResultsPrinter from "./ResultsPrinter";
 import AgeRanges from "./AgeRanges";
+import { useState } from "react";
+import Button from "@/components/Button";
+import { setRaceDistance } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -109,6 +112,7 @@ export default async function RacePage({
 
   let bibs = (await kv.get<number[]>(["bibs", raceCode])).value;
   let times = (await kv.get<number[]>(["times", raceCode])).value;
+  let distance = (await kv.get<number>(["distance", raceCode])).value;
 
   return (
     <main>
@@ -128,16 +132,31 @@ export default async function RacePage({
           <p>
             <strong>Race Code:</strong> {race.code}
           </p>
-          <div style={{ display: "flex", marginBottom: "5px" }}>
-            <p style={{ marginRight: "5px" }}>
-              <strong>Distance (mi): </strong>
-            </p>
+          <form
+            style={{
+              gap: "10px",
+              display: "flex",
+              marginBottom: "10px",
+              marginTop: "10px",
+            }}
+            action={async (e) => {
+              "use server";
+              await setRaceDistance(
+                raceCode,
+                parseFloat(e.get("distance")?.valueOf() as string)
+              );
+              distance = parseFloat(e.get("distance")?.valueOf() as string);
+            }}
+          >
             <input
               className={styles.ageRangeInput}
               type="number"
               placeholder="Distance"
+              defaultValue={distance ?? ""}
+              name="distance"
             />
-          </div>
+            <Button type="submit">Set Distance</Button>
+          </form>
           <RaceDeleteButton meet={meet} raceCode={race.code} />
         </Card>
         <Card>
@@ -162,6 +181,7 @@ export default async function RacePage({
                 meet={meet}
                 bibs={bibs}
                 times={times}
+                distance={distance ?? 1}
               />
               <div className={styles.finishersTableContainer}>
                 <table className={styles.finishersTable}>
@@ -206,6 +226,7 @@ export default async function RacePage({
             race={race}
             bibs={bibs ?? []}
             times={times ?? []}
+            distance={distance ?? 1}
           />
         </Card>
       </div>
