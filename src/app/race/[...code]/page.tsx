@@ -125,9 +125,19 @@ export default async function RacePage({
           <p>
             <strong>Meet:</strong> {meet.name}
           </p>
-          <p style={{ marginBottom: "10px" }}>
+          <p>
             <strong>Race Code:</strong> {race.code}
           </p>
+          <div style={{ display: "flex", marginBottom: "5px" }}>
+            <p style={{ marginRight: "5px" }}>
+              <strong>Distance (mi): </strong>
+            </p>
+            <input
+              className={styles.ageRangeInput}
+              type="number"
+              placeholder="Distance"
+            />
+          </div>
           <RaceDeleteButton meet={meet} raceCode={race.code} />
         </Card>
         <Card>

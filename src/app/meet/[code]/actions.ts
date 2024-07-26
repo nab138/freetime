@@ -1,5 +1,6 @@
 "use server";
 
+import { deleteRace } from "@/app/race/[...code]/actions";
 import { getKv } from "@/kv";
 import { Athlete, MeetData, Race } from "@/structures";
 
@@ -42,9 +43,7 @@ export async function deleteMeet(meet: MeetData) {
   await kv.delete(["meets", meet.code]);
   await kv.delete(["admin", meet.adminCode]);
   for (let race of meet.races) {
-    await kv.delete(["race", race]);
-    await kv.delete(["bibs", race]);
-    await kv.delete(["times", race]);
+    await deleteRace(race, meet, false);
   }
 }
 

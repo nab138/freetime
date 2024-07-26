@@ -4,13 +4,21 @@ import { getKv } from "@/kv";
 import { MeetData, Race } from "@/structures";
 import { AgeRange } from "./AgeRanges";
 
-export async function deleteRace(code: string, meet: MeetData) {
+export async function deleteRace(
+  code: string,
+  meet: MeetData,
+  updateMeets: boolean = true
+) {
   const kv = await getKv();
   await kv.delete(["race", code]);
   await kv.delete(["bibs", code]);
   await kv.delete(["times", code]);
-  meet.races.filter((r) => r !== code);
-  await kv.set(["meets", meet.code], meet);
+  await kv.delete(["ageRanges", code]);
+  await kv.delete(["distance", code]);
+  if (updateMeets) {
+    meet.races.filter((r) => r !== code);
+    await kv.set(["meets", meet.code], meet);
+  }
 }
 
 export async function getStartTime(code: string) {
@@ -57,4 +65,14 @@ export async function setAgeRanges(code: string, ageRanges: AgeRange[]) {
 export async function getAgeRanges(code: string) {
   const kv = await getKv();
   return (await kv.get<AgeRange[]>(["ageRanges", code])).value ?? [[0, 100]];
+}
+
+export async function setRaceDistance(code: string, distance: number) {
+  const kv = await getKv();
+  await kv.set(["distance", code], distance);
+}
+
+export async function getRaceDistance(code: string) {
+  const kv = await getKv();
+  return (await kv.get<number>(["distance", code])).value ?? 0;
 }
