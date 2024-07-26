@@ -8,7 +8,6 @@ const withPWA = withPWAInit({
     cacheOnFrontEndNav: true,
     aggressiveFrontEndNavCaching: true,
     reloadOnOnline: true,
-
 });
 
 /** @type {import('next').NextConfig} */

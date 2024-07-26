@@ -2,6 +2,7 @@
 
 import { getKv } from "@/kv";
 import { MeetData, Race } from "@/structures";
+import { AgeRange } from "./AgeRanges";
 
 export async function deleteRace(code: string, meet: MeetData) {
   const kv = await getKv();
@@ -46,4 +47,14 @@ export async function getBibs(code: string) {
 export async function setServerBibs(code: string, bibs: number[]) {
   const kv = await getKv();
   await kv.set(["bibs", code], bibs);
+}
+
+export async function setAgeRanges(code: string, ageRanges: AgeRange[]) {
+  const kv = await getKv();
+  await kv.set(["ageRanges", code], ageRanges);
+}
+
+export async function getAgeRanges(code: string) {
+  const kv = await getKv();
+  return (await kv.get<AgeRange[]>(["ageRanges", code])).value ?? [[0, 100]];
 }

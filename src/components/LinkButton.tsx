@@ -1,4 +1,3 @@
-import Link from "next/link";
 import styles from "./Button.module.css";
 
 export default function LinkButton({
@@ -9,8 +8,8 @@ export default function LinkButton({
   href: string;
 }>) {
   return (
-    <Link className={styles.btn} href={href}>
+    <a className={styles.btn} href={href}>
       {children}
-    </Link>
+    </a>
   );
 }

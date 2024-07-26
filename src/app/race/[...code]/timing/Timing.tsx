@@ -3,10 +3,10 @@
 import Card from "@/components/Card";
 import ClientButton from "@/components/ClientButton";
 
-import styles from "./race.module.css";
+import styles from "../race.module.css";
 import { useEffect, useState } from "react";
 
-import { getStartTime, getTimes, setRaceStartTime, setTimes } from "./actions";
+import { getStartTime, getTimes, setRaceStartTime, setTimes } from "../actions";
 import { toast } from "sonner";
 
 export default function Timing({ raceCode }: { raceCode: string }) {

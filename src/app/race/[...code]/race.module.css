@@ -31,3 +31,17 @@
   color: white !important;
   margin-right: 10px !important;
 }
+
+.ageRange {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ageRangeInput {
+  width: 75px;
+  border-radius: 5px;
+  border: 1px solid rgb(var(--card-border-rgb));
+  padding: 5px;
+}

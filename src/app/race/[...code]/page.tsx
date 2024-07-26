@@ -4,12 +4,15 @@ import { MeetData, Race, UserData } from "@/structures";
 import styles from "./race.module.css";
 import RaceDeleteButton from "./RaceDeleteButton";
 import LinkButton from "@/components/LinkButton";
-import Timing from "./Timing";
+import Timing from "./timing/Timing";
 import { getKv } from "@/kv";
 import Bibs from "./Bibs";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import ResultsPrinter from "./ResultsPrinter";
+import AgeRanges from "./AgeRanges";
+
+export const dynamic = "force-dynamic";
 
 export default async function RacePage({
   params,
@@ -185,6 +188,15 @@ export default async function RacePage({
               </div>
             </>
           )}
+        </Card>
+        <Card>
+          <h2>Age Ranges</h2>
+          <AgeRanges
+            meet={meet}
+            race={race}
+            bibs={bibs ?? []}
+            times={times ?? []}
+          />
         </Card>
       </div>
     </main>
