@@ -23,6 +23,9 @@ export default function ClientButton({
       type={type}
       onClick={onClick}
       style={style}
+      onMouseDown={(e) => {
+        e.preventDefault();
+      }}
       disabled={disabled}
     >
       {children}
