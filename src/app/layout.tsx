@@ -18,7 +18,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>{children}</body>
-      <Toaster expand richColors position={"top-right"} />
+      <Toaster
+        expand
+        richColors
+        position={"top-right"}
+        style={{
+          position: "fixed",
+          top: "1rem",
+          right: "1rem",
+          zIndex: 9999,
+        }}
+      />
     </html>
   );
 }
