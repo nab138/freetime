@@ -4,7 +4,7 @@ import Card from "@/components/Card";
 import ClientButton from "@/components/ClientButton";
 
 import styles from "../race.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { getStartTime, getTimes, setRaceStartTime, setTimes } from "../actions";
 import { toast } from "sonner";
@@ -14,6 +14,8 @@ export default function Timing({ raceCode }: { raceCode: string }) {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [finishers, setFinishers] = useState<number[]>([]);
+
+  const finishersTable = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!startTime && !loaded) {
@@ -26,6 +28,10 @@ export default function Timing({ raceCode }: { raceCode: string }) {
           setStartTime(new Date(startTime));
         }
         setFinishers(finishers);
+        finishersTable.current?.scrollTo(
+          0,
+          finishersTable.current.scrollHeight
+        );
         setLoaded(true);
       })();
     }
@@ -99,6 +105,13 @@ export default function Timing({ raceCode }: { raceCode: string }) {
               currentTimes.push(finishTime.getTime());
               await setTimes(raceCode, currentTimes);
               setFinishers(currentTimes);
+              // Request animation frame to scroll to the bottom of the finishers table
+              setTimeout(() => {
+                finishersTable.current?.scrollTo(
+                  0,
+                  finishersTable.current.scrollHeight
+                );
+              }, 1);
             }}
             style={{
               padding: "30px",
@@ -112,7 +125,7 @@ export default function Timing({ raceCode }: { raceCode: string }) {
           </ClientButton>
         </div>
         {startTime && (
-          <div className={styles.finishersTableContainer}>
+          <div className={styles.finishersTableContainer} ref={finishersTable}>
             <table className={styles.finishersTable}>
               <tbody>
                 {finishers.map((time, index) => (

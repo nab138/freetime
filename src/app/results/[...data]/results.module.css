@@ -23,7 +23,7 @@
 .resultsTable {
   width: 100%;
   max-height: 50vh;
-  min-width: 80vw;
+  min-width: 89vw;
 }
 
 .resultsTableContainer {
@@ -31,7 +31,7 @@
   max-height: calc(100vh - 300px);
   overflow-y: auto;
   overflow-x: auto;
-  max-width: 87vw;
+  max-width: 90vw;
 }
 
 @media screen and (max-width: 750px) {

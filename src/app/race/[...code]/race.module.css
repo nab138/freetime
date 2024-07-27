@@ -21,9 +21,8 @@
   max-height: 50vh;
   overflow-y: auto;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   touch-action: pan-x pan-y;
-  -webkit-overflow-scrolling: touch;
 }
 
 .deleteBtn {

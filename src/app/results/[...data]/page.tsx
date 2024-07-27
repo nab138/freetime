@@ -4,6 +4,7 @@ import { MeetData, Race } from "@/structures";
 import Link from "next/link";
 import LiveResults from "./LiveResults";
 import LinkButton from "@/components/LinkButton";
+import { auth } from "@/auth";
 
 export default async function Results({
   params,
@@ -11,6 +12,7 @@ export default async function Results({
   params: { data: string[] };
 }) {
   const kv = await getKv();
+  const session = await auth();
   if (params.data.length < 1) {
     return (
       <main>
@@ -57,7 +59,11 @@ export default async function Results({
             </h3>
             <LinkButton href={"/results/" + meetCode}>Back to meet</LinkButton>
           </div>
-          <LiveResults meetCode={meet.code} raceCode={race.code} />
+          <LiveResults
+            meetCode={meet.code}
+            raceCode={race.code}
+            loggedIn={session?.user !== null}
+          />
         </div>
       </main>
     );

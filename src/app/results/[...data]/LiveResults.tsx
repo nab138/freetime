@@ -9,9 +9,11 @@ import { Athlete } from "@/structures";
 export default function LiveResults({
   meetCode,
   raceCode,
+  loggedIn,
 }: {
   meetCode: string;
   raceCode: string;
+  loggedIn: boolean;
 }) {
   const [bibs, setBibs] = useState<number[]>([]);
   const [times, setTimes] = useState<number[]>([]);
@@ -33,7 +35,7 @@ export default function LiveResults({
         setRoster(newMeet?.roster ?? []);
     };
     update();
-    setInterval(update, 30000);
+    setInterval(update, loggedIn ? 30 * 1000 : 5 * 60 * 1000);
   }, []);
   return (
     <Card style={{ flexGrow: 1 }}>
