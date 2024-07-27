@@ -76,6 +76,7 @@ export default function Bibs({
             disabled={!loaded && startTime === null}
             onClick={async (event) => {
               event.preventDefault();
+              event.stopPropagation();
               let bibRaw = document.getElementById(
                 "bibnumber"
               ) as HTMLInputElement;
