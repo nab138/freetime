@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 const APP_NAME = "PWA App";
 const APP_DEFAULT_TITLE = "FreeTime";
 const APP_TITLE_TEMPLATE = "%s - FreeTime";
-const APP_DESCRIPTION = "A free, terrible race timer";
+const APP_DESCRIPTION = "A Flusche & Sharp project";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>{children}</body>
-      <Toaster expand richColors position="top-right" className="fixed-toast" />
+      <Toaster expand richColors />
     </html>
   );
 }
