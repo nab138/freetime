@@ -82,16 +82,16 @@ export default function Bibs({
               ) as HTMLInputElement;
               let bib = parseInt(bibRaw.value);
               if (isNaN(bib)) {
-                toast.error("Please enter a valid bib number.");
+                alert("Please enter a valid bib number.");
                 return;
               }
               let currentBibs = await getBibs(raceCode);
               if (currentBibs.includes(bib)) {
-                toast.warning("Bib already marked as finished.");
+                alert("Bib already marked as finished.");
                 return;
               }
               if (!roster.find((a) => a.bib === bib)) {
-                toast.warning("Bib not found in roster.");
+                alert("Bib not found in roster.");
                 return;
               }
 
