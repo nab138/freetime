@@ -2,9 +2,11 @@
 
 import Card from "@/components/Card";
 import styles from "./results.module.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getBibs, getMeet, getRace, getTimes } from "./actions";
 import { Athlete } from "@/structures";
+import ClientButton from "@/components/ClientButton";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 export default function LiveResults({
   meetCode,
@@ -19,6 +21,46 @@ export default function LiveResults({
   const [times, setTimes] = useState<number[]>([]);
   const [startTime, setStartTime] = useState<number | undefined>(undefined);
   const [roster, setRoster] = useState<Athlete[]>([]);
+  const scrollInterval = useRef<NodeJS.Timeout | null>(null);
+  const scrollUpTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handle = useFullScreenHandle();
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  const reportChange = useCallback(
+    (state: boolean) => {
+      if (state) {
+        scrollInterval.current = setInterval(() => {
+          if (tableContainerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } =
+              tableContainerRef.current;
+            if (scrollTop + clientHeight >= scrollHeight) {
+              if (!scrollUpTimeout.current) {
+                scrollUpTimeout.current = setTimeout(() => {
+                  scrollUpTimeout.current = setInterval(() => {
+                    tableContainerRef.current?.scrollBy({
+                      top: -5,
+                    });
+                    if (tableContainerRef.current?.scrollTop === 0) {
+                      clearInterval(scrollUpTimeout.current as NodeJS.Timeout);
+                      scrollUpTimeout.current = null;
+                    }
+                  }, 1);
+                }, 2500);
+              }
+            } else if (!scrollUpTimeout.current) {
+              tableContainerRef.current.scrollBy({
+                top: 1,
+              });
+            }
+          }
+        }, 25);
+      } else if (scrollInterval.current) {
+        clearInterval(scrollInterval.current);
+      }
+    },
+    [handle]
+  );
 
   useEffect(() => {
     let update = async () => {
@@ -39,53 +81,74 @@ export default function LiveResults({
   }, []);
   return (
     <Card style={{ flexGrow: 1 }}>
-      <h2>
-        Live Results -{" "}
-        <span style={{ color: "var(--danger)" }}>Results are NOT final!</span>
-      </h2>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <h2 style={{ marginBottom: 0 }}>
+          Live Results -{" "}
+          <span style={{ color: "var(--danger)" }}>Results are NOT final!</span>
+        </h2>
+        <ClientButton
+          onClick={() => {
+            handle.enter();
+          }}
+          style={{ padding: "8px", margin: 0 }}
+        >
+          Maximize
+        </ClientButton>
+      </div>
       {(startTime === undefined || startTime === null) && (
         <p>This race has not started yet.</p>
       )}
       {startTime !== undefined && startTime !== null && (
-        <div className={styles.resultsTableContainer}>
-          <table className={styles.resultsTable}>
-            <thead>
-              <tr>
-                <th>Place</th>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Age</th>
-                <th>Bib</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bibs.map((bib, index) => {
-                let athlete = roster.find((a) => a.bib === bib);
-                return (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{athlete?.name ?? "Unkown Runner"}</td>
-                    <td>{athlete?.gender ?? "?"}</td>
-                    <td>{athlete?.age ?? "?"}</td>
-                    <td>{bib}</td>
-                    <td>
-                      {times.length <= index &&
-                      startTime !== undefined &&
-                      startTime !== null
-                        ? "N/A"
-                        : formatTimeDifference(
-                            new Date(startTime as number),
-                            new Date(times[index]),
-                            true
-                          )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <FullScreen handle={handle} onChange={reportChange}>
+          <div
+            className={
+              handle.active
+                ? styles.fullScreenResultsContainer +
+                  " " +
+                  styles.resultsTableContainer
+                : styles.resultsTableContainer
+            }
+            ref={tableContainerRef}
+          >
+            <table className={styles.resultsTable}>
+              <thead>
+                <tr>
+                  <th>Place</th>
+                  <th>Name</th>
+                  <th>Gender</th>
+                  <th>Age</th>
+                  <th>Bib</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bibs.map((bib, index) => {
+                  let athlete = roster.find((a) => a.bib === bib);
+                  return (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{athlete?.name ?? "Unkown Runner"}</td>
+                      <td>{athlete?.gender ?? "?"}</td>
+                      <td>{athlete?.age ?? "?"}</td>
+                      <td>{bib}</td>
+                      <td>
+                        {times.length <= index &&
+                        startTime !== undefined &&
+                        startTime !== null
+                          ? "N/A"
+                          : formatTimeDifference(
+                              new Date(startTime as number),
+                              new Date(times[index]),
+                              true
+                            )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </FullScreen>
       )}
     </Card>
   );

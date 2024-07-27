@@ -38,7 +38,7 @@
 
   --callout-rgb: 238, 240, 241;
   --callout-border-rgb: 172, 175, 176;
-  --card-rgb: 150, 150, 150;
+  --card-rgb: 200, 200, 200;
   --card-border-rgb: 100, 100, 100;
 }
 
@@ -176,4 +176,13 @@ main {
   .content {
     flex-direction: column;
   }
+}
+
+:fullscreen::backdrop {
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
 }
