@@ -74,7 +74,8 @@ export default function Bibs({
           />
           <ClientButton
             disabled={!loaded && startTime === null}
-            onClick={async () => {
+            onClick={async (event) => {
+              event.preventDefault();
               let bibRaw = document.getElementById(
                 "bibnumber"
               ) as HTMLInputElement;

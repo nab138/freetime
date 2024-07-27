@@ -14,7 +14,7 @@ export default function ClientButton({
   type?: "button" | "submit" | "reset";
   style?: React.CSSProperties;
   className?: string;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   disabled?: boolean;
 }>) {
   return (
