@@ -28,10 +28,12 @@ export default function Timing({ raceCode }: { raceCode: string }) {
           setStartTime(new Date(startTime));
         }
         setFinishers(finishers);
-        finishersTable.current?.scrollTo(
-          0,
-          finishersTable.current.scrollHeight
-        );
+        setTimeout(() => {
+          finishersTable.current?.scrollTo(
+            0,
+            finishersTable.current.scrollHeight
+          );
+        }, 1);
         setLoaded(true);
       })();
     }

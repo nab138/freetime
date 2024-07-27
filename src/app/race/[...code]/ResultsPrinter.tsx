@@ -7,6 +7,7 @@ import { useReactToPrint } from "react-to-print";
 
 import styles from "./results.module.css";
 import { AgeRange } from "./AgeRanges";
+import LinkButton from "@/components/LinkButton";
 
 export default function ResultsPrinter({
   meet,
@@ -97,6 +98,14 @@ export default function ResultsPrinter({
       <ClientButton onClick={handlePrint}>
         Print {ageRanges === null ? "Overall" : "Age Ranges"}
       </ClientButton>
+      {ageRanges === null && (
+        <LinkButton
+          style={{ marginLeft: "10px" }}
+          href={`/results/${meet.code}/${race.code}`}
+        >
+          View Live
+        </LinkButton>
+      )}
       <div style={{ display: "none" }}>
         <div className={styles.body} ref={contentRef}>
           <style>{getPageMargins()}</style>

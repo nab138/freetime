@@ -4,7 +4,7 @@ import Card from "@/components/Card";
 import ClientButton from "@/components/ClientButton";
 
 import styles from "./race.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { getBibs, getStartTime, setServerBibs, setTimes } from "./actions";
 import { toast } from "sonner";
@@ -22,6 +22,8 @@ export default function Bibs({
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bibs, setBibs] = useState<number[]>([]);
 
+  const table = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!startTime && !loaded) {
       (async () => {
@@ -34,6 +36,9 @@ export default function Bibs({
         }
         setBibs(bibs);
         setLoaded(true);
+        setTimeout(() => {
+          table.current?.scrollTo(0, table.current.scrollHeight);
+        }, 1);
       })();
     }
 
@@ -93,6 +98,9 @@ export default function Bibs({
               await setServerBibs(raceCode, currentBibs);
               setBibs(currentBibs);
               bibRaw.focus();
+              setTimeout(() => {
+                table.current?.scrollTo(0, table.current.scrollHeight);
+              }, 1);
             }}
             style={{
               flexGrow: 1,
@@ -104,7 +112,7 @@ export default function Bibs({
           </ClientButton>
         </div>
         {startTime && (
-          <div className={styles.finishersTableContainer}>
+          <div className={styles.finishersTableContainer} ref={table}>
             <table className={styles.finishersTable}>
               <tbody>
                 {bibs.map((bib, index) => (
