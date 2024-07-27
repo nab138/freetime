@@ -186,3 +186,18 @@ main {
     )
     rgb(var(--background-start-rgb));
 }
+
+.fixed-toast {
+  position: fixed !important;
+  top: 1rem !important;
+  right: 1rem;
+  z-index: 9999;
+}
+
+@media screen and (max-height: 500px) {
+  .fixed-toast {
+    top: calc(
+      1rem + 50vh
+    ) !important; /* Adjust position when viewport height is reduced */
+  }
+}
