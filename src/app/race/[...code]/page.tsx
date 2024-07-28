@@ -145,7 +145,7 @@ export default async function RacePage({
                 raceCode,
                 parseFloat(e.get("distance")?.valueOf() as string)
               );
-              distance = parseFloat(e.get("distance")?.valueOf() as string);
+              redirect("/race/" + meetCode + "/" + raceCode);
             }}
           >
             <input
@@ -154,6 +154,7 @@ export default async function RacePage({
               placeholder="Distance"
               defaultValue={distance ?? ""}
               name="distance"
+              step="0.001"
             />
             <Button type="submit">Set Distance</Button>
           </form>
