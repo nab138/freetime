@@ -3,9 +3,11 @@ import { openKv, Kv } from "@deno/kv";
 let kv: Kv | null = null;
 
 const kvPromise = (async () => {
-  kv = await openKv(
-    "https://api.deno.com/databases/73b2c83f-70f3-4a0f-827c-d57dc23a332f/connect"
-  );
+  const kvUrl = process.env.DENO_KV_URL;
+  if (!kvUrl) {
+    throw new Error("DENO_KV_URL environment variable is not set");
+  }
+  kv = await openKv(kvUrl);
   return kv;
 })();
 
