@@ -1,12 +1,12 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import { auth, signIn } from "@/auth";
-import GoogleSignin from "@/components/GoogleSignin";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getKv } from "@/kv";
 import { MeetData } from "@/structures";
 import Link from "next/link";
 import Card from "@/components/Card";
+import LinkButton from "@/components/LinkButton";
 
 export default async function Home() {
   const session = await auth();
@@ -52,14 +52,7 @@ export default async function Home() {
         )}
       </Card>
       <p>Freetime is currently in closed beta.</p>
-      <form
-        action={async () => {
-          "use server";
-          await signIn("google", { redirectTo: "/dashboard" });
-        }}
-      >
-        <GoogleSignin />
-      </form>
+      <LinkButton href="/signin">Sign In</LinkButton>
     </main>
   );
 }

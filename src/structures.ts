@@ -1,6 +1,7 @@
 export type UserData = {
   email: string;
   meets: string[];
+  password?: string;
 };
 
 export type MeetData = {
