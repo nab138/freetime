@@ -1,4 +1,17 @@
-import { openKv, Kv } from "@deno/kv";
+import { Kv, makeRemoteService } from "kv-connect-kit";
+import { deserialize, serialize } from "v8";
+
+const accessToken = process.env.DENO_KV_ACCESS_TOKEN;
+if (accessToken === undefined)
+  throw new Error(
+    `Set your personal access token: https://dash.deno.com/account#access-tokens`
+  );
+const { openKv } = makeRemoteService({
+  accessToken,
+  wrapUnknownValues: true,
+  encodeV8: serialize,
+  decodeV8: deserialize,
+});
 
 let kv: Kv | null = null;
 
