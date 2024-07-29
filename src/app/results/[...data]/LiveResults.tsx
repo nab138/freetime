@@ -43,7 +43,9 @@ export default function LiveResults({
                     });
                     if (tableContainerRef.current?.scrollTop === 0) {
                       clearInterval(scrollUpTimeout.current as NodeJS.Timeout);
-                      scrollUpTimeout.current = null;
+                      setTimeout(() => {
+                        scrollUpTimeout.current = null;
+                      }, 2500);
                     }
                   }, 1);
                 }, 2500);
