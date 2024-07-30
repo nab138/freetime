@@ -22,16 +22,7 @@ export default async function SignIn() {
         className={styles.signInForm}
         action={async (formData) => {
           "use server";
-          try {
-            await signIn("credentials", formData);
-            redirect("/dashboard");
-          } catch (e) {
-            if (isRedirectError(e)) {
-              throw e;
-            } else {
-              console.error(e);
-            }
-          }
+          await signIn("credentials", formData);
         }}
       >
         <label>
@@ -42,6 +33,7 @@ export default async function SignIn() {
           Password
           <input name="password" type="password" />
         </label>
+        <input type="hidden" name="redirectTo" value="/dashboard" />
         <Button type="submit">Sign In</Button>
       </form>
       <form
