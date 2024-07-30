@@ -106,6 +106,14 @@ export default function ResultsPrinter({
           View Live
         </LinkButton>
       )}
+      {ageRanges === null && (
+        <LinkButton
+          style={{ marginLeft: "10px" }}
+          href={`/editor/${meet.code}/${race.code}`}
+        >
+          Edit Results
+        </LinkButton>
+      )}
       <div style={{ display: "none" }}>
         <div className={styles.body} ref={contentRef}>
           <style>{getPageMargins()}</style>

@@ -1,0 +1,28 @@
+.textarea {
+  width: fit-content;
+  height: calc(100vh - 280px);
+  background-color: black;
+  white-space: pre;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  position: relative;
+  padding: 10px;
+}
+
+.textareachild {
+  height: fit-content;
+  box-sizing: border-box;
+  min-width: 125px;
+  border-right: 2px solid rgb(var(--card-border-rgb));
+  border-left: 2px solid rgb(var(--card-border-rgb));
+  padding: 5px;
+  /* Collapse overlapping borders */
+  margin-right: -2px;
+}
+
+.textareachild h3 {
+  width: 100%;
+  border-bottom: 2px solid rgb(var(--card-border-rgb));
+  padding-bottom: 5px;
+}
