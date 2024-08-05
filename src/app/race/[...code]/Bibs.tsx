@@ -66,12 +66,7 @@ export default function Bibs({
       <Card>
         <h2>Finishers (bibs)</h2>
         <div className={styles.buttons} style={{ marginTop: "15px" }}>
-          <input
-            type="number"
-            id="bibnumber"
-            placeholder="Bib Number"
-            required
-          />
+          <input id="bibnumber" placeholder="Bib Number" required />
           <ClientButton
             disabled={!loaded && startTime === null}
             onClick={async (event) => {
@@ -81,18 +76,19 @@ export default function Bibs({
                 "bibnumber"
               ) as HTMLInputElement;
               let bib = parseInt(bibRaw.value);
-              if (isNaN(bib)) {
-                alert("Please enter a valid bib number.");
-                return;
-              }
               let currentBibs = await getBibs(raceCode);
               if (currentBibs.includes(bib)) {
                 alert("Bib already marked as finished.");
                 return;
               }
               if (!roster.find((a) => a.bib === bib)) {
-                alert("Bib not found in roster.");
-                return;
+                let nameLookup = roster.find((a) => a.name === bibRaw.value);
+                if (nameLookup) {
+                  bib = nameLookup.bib;
+                } else {
+                  alert("Bib not found in roster.");
+                  return;
+                }
               }
 
               bibRaw.value = "";
