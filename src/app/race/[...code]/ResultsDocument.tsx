@@ -147,6 +147,10 @@ const ResultsDocument = ({
     meet.roster[0].age !== undefined &&
     !isNaN(meet.roster[0].age);
 
+  if (!showingGender && resultsName === "Overall") {
+    groups = [groups[groups.length - 1]];
+  }
+
   return (
     <Document>
       <Page style={styles.page}>
