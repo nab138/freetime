@@ -186,3 +186,16 @@ main {
     )
     rgb(var(--background-start-rgb));
 }
+
+@media print {
+  @page {
+    size: 8.5in 11in;
+  }
+  html,
+  body {
+    height: 100%; /* Use 100% here to support printing more than a single page*/
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+}

@@ -97,27 +97,29 @@ export default function ResultsPrinter({
 
   return (
     <div>
-      <ClientButton onClick={handlePrint}>
-        Print {ageRanges === null ? "Overall (test)" : "Age Ranges"}
-      </ClientButton>
-      {ageRanges === null && (
-        <LinkButton
-          style={{ marginLeft: "10px" }}
-          href={`/results/${meet.code}/${race.code}`}
-        >
-          View Live
-        </LinkButton>
-      )}
-      {ageRanges === null && (
-        <LinkButton
-          style={{ marginLeft: "10px" }}
-          href={`/editor/${meet.code}/${race.code}`}
-        >
-          Edit Results
-        </LinkButton>
-      )}
+      <div className={styles.buttonContainer}>
+        <ClientButton onClick={handlePrint}>
+          Print {ageRanges === null ? "Overall (test)" : "Age Ranges"}
+        </ClientButton>
+        {ageRanges === null && (
+          <LinkButton href={`/results/${meet.code}/${race.code}`}>
+            View Live
+          </LinkButton>
+        )}
+        {ageRanges === null && (
+          <LinkButton href={`/editor/${meet.code}/${race.code}`}>
+            Edit Results
+          </LinkButton>
+        )}
+      </div>
       <div style={{ display: "none" }}>
-        <div className={styles.body} ref={contentRef}>
+        <div
+          className={styles.body}
+          ref={contentRef}
+          style={{
+            backgroundColor: "white",
+          }}
+        >
           <style>{getPageMargins()}</style>
           <div
             style={{
@@ -177,7 +179,7 @@ export default function ResultsPrinter({
               </tr>
             </thead>
             <tbody className={styles.tbody}>
-              {groups.map((group, groupIndex) => (
+              {groups.map((group) => (
                 <>
                   <tr>
                     <td colSpan={5}>
