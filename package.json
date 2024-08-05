@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@david.kucsai/react-pdf-table": "^0.4.1",
     "@ducanh2912/next-pwa": "^10.2.8",
+    "@react-pdf/renderer": "^3.4.4",
     "bcrypt-edge": "^0.0.6",
     "kv-connect-kit": "^0.0.5",
     "next": "14.2.5",
@@ -18,7 +20,6 @@
     "react": "^18",
     "react-dom": "^18",
     "react-full-screen": "^1.1.1",
-    "react-to-print": "^2.15.1",
     "sharp": "^0.33.4",
     "sonner": "^1.5.0",
     "zod": "^3.23.8"
