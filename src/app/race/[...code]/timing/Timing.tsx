@@ -100,7 +100,7 @@ export default function Timing({ raceCode }: { raceCode: string }) {
         <h2>Finishers</h2>
         <div className={styles.buttons} style={{ marginTop: "15px" }}>
           <ClientButton
-            disabled={!loaded && startTime === null}
+            disabled={!loaded || startTime === null}
             onClick={async () => {
               let finishTime = new Date();
               let currentTimes = await getTimes(raceCode);

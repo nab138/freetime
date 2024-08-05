@@ -100,7 +100,7 @@ export default function ResultsPrinter({
               resultsName={ageRanges === null ? "Overall" : "Age Group"}
               meet={meet}
               race={race}
-              groups={groups}
+              groups={groups.filter((g) => g.data.length > 0)}
               distance={distance}
             />
           }

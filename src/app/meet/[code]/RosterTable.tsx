@@ -28,11 +28,11 @@ export default function RosterTable({ meet }: { meet: MeetData }) {
         for (let lineNum in lines) {
           let line = lines[lineNum];
           let [first, last, grade, team, gender, bib] = line.split(",");
-          if (first && last && grade && bib) {
+          if (first && last && /* grade && */ bib) {
             let name = `${first} ${last}`;
             let age = parseInt(grade);
             let bibNum = parseInt(bib);
-            if (isNaN(age) || isNaN(bibNum)) {
+            if (/*isNaN(age) || */ isNaN(bibNum)) {
               toast.error("Invalid .csv file, unable to parse line " + lineNum);
               return;
             }
