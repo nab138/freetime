@@ -7,6 +7,7 @@ import { signInSchema } from "./lib/zod";
 import { UserData } from "./structures";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     Google,
     Credentials({
