@@ -33,7 +33,6 @@ export default function ResultsPrinter({
   const contentRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
     content: () => contentRef.current,
-    removeAfterPrint: true,
   });
 
   if (!isClient) {
@@ -99,7 +98,7 @@ export default function ResultsPrinter({
   return (
     <div>
       <ClientButton onClick={handlePrint}>
-        Print {ageRanges === null ? "Overall" : "Age Ranges"}
+        Print {ageRanges === null ? "Overall (test)" : "Age Ranges"}
       </ClientButton>
       {ageRanges === null && (
         <LinkButton
