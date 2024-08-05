@@ -31,7 +31,10 @@ export default function ResultsPrinter({
   }, []);
 
   const contentRef = useRef<HTMLDivElement>(null);
-  const handlePrint = useReactToPrint({ content: () => contentRef.current });
+  const handlePrint = useReactToPrint({
+    content: () => contentRef.current,
+    removeAfterPrint: true,
+  });
 
   if (!isClient) {
     return null; // or a loading spinner
