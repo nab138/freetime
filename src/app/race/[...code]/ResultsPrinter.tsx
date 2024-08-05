@@ -104,7 +104,7 @@ export default function ResultsPrinter({
               distance={distance}
             />
           }
-          fileName="results.pdf"
+          fileName={ageRanges === null ? "OverallResults" : "AgeGroupResults"}
         >
           {({ loading }) => (loading ? "Loading document..." : "Download PDF")}
         </PDFDownloadLink>
