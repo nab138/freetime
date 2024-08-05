@@ -86,8 +86,15 @@ export default function Bibs({
                 if (nameLookup) {
                   bib = nameLookup.bib;
                 } else {
-                  alert("Bib not found in roster.");
-                  return;
+                  let firstNameLookup = roster.find(
+                    (a) => a.name.split(" ")[0] === bibRaw.value
+                  );
+                  if (firstNameLookup) {
+                    bib = firstNameLookup.bib;
+                  } else {
+                    alert("Bib not found in roster.");
+                    return;
+                  }
                 }
               }
 
