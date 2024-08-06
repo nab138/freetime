@@ -86,14 +86,14 @@ export default function AgeRanges({
       >
         Add range
       </ClientButton>
-{/*       <ResultsPrinter
+     <ResultsPrinter
         ageRanges={ageRanges}
         meet={meet}
         race={race}
         bibs={bibs}
         times={times}
         distance={distance}
-      /> */}
+      />
     </div>
   );
 }
