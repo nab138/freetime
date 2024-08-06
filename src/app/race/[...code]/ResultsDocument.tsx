@@ -246,7 +246,7 @@ const ResultsDocument = ({
                     </View>
                     <View style={[styles.tableCol, styles.colTime]}>
                       <Text style={styles.tableCell}>
-                        {formatTime(timeDifference)}
+                        {formatTime(timeDifference, true)}
                       </Text>
                     </View>
                   </View>
