@@ -16,7 +16,7 @@ export async function deleteRace(
   await kv.delete(["ageRanges", code]);
   await kv.delete(["distance", code]);
   if (updateMeets) {
-    meet.races.filter((r) => r !== code);
+    meet.races = meet.races.filter((r) => r !== code);
     await kv.set(["meets", meet.code], meet);
   }
 }
