@@ -177,13 +177,13 @@ export default async function RacePage({
           {(bibs === null || times === null) && <p>No results yet.</p>}
           {bibs !== null && times !== null && (
             <>
-              <ResultsPrinter
+{/*               <ResultsPrinter
                 race={race}
                 meet={meet}
                 bibs={bibs}
                 times={times}
                 distance={distance ?? 1}
-              />
+              /> */}
               <div className={styles.finishersTableContainer}>
                 <table className={styles.finishersTable}>
                   <thead>
