@@ -134,7 +134,7 @@ export default function Bibs({
                       >
                         🗑
                       </ClientButton>
-                      {bib}
+                      {roster.find((r) => r.bib === bib).name} - #{bib}
                     </td>
                   </tr>
                 ))}
