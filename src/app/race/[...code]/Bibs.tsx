@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { getBibs, getStartTime, setServerBibs, setTimes } from "./actions";
 import { toast } from "sonner";
 import { Athlete } from "@/structures";
+import Button from "@/components/Button";
 
 export default function Bibs({
   raceCode,
@@ -65,48 +66,51 @@ export default function Bibs({
       </Card>
       <Card>
         <h2>Finishers (bibs)</h2>
-        <div className={styles.buttons} style={{ marginTop: "15px" }}>
-          <input id="bibnumber" placeholder="Bib Number" required />
-          <ClientButton
-            disabled={!loaded && startTime === null}
-            onClick={async (event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              let bibRaw = document.getElementById(
-                "bibnumber"
-              ) as HTMLInputElement;
-              let bib = parseInt(bibRaw.value);
-              let currentBibs = await getBibs(raceCode);
-              if (currentBibs.includes(bib)) {
-                alert("Bib already marked as finished.");
-                return;
-              }
-              if (!roster.find((a) => a.bib === bib)) {
-                let nameLookup = roster.find((a) => a.name === bibRaw.value);
-                if (nameLookup) {
-                  bib = nameLookup.bib;
+        <form
+          className={styles.buttons}
+          style={{ marginTop: "15px" }}
+          onSubmit={async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            let bibRaw = document.getElementById(
+              "bibnumber"
+            ) as HTMLInputElement;
+            let bib = parseInt(bibRaw.value);
+            let currentBibs = await getBibs(raceCode);
+            if (currentBibs.includes(bib)) {
+              alert("Bib already marked as finished.");
+              return;
+            }
+            if (!roster.find((a) => a.bib === bib)) {
+              let nameLookup = roster.find((a) => a.name === bibRaw.value);
+              if (nameLookup) {
+                bib = nameLookup.bib;
+              } else {
+                let firstNameLookup = roster.find(
+                  (a) => a.name.split(" ")[0] === bibRaw.value
+                );
+                if (firstNameLookup) {
+                  bib = firstNameLookup.bib;
                 } else {
-                  let firstNameLookup = roster.find(
-                    (a) => a.name.split(" ")[0] === bibRaw.value
-                  );
-                  if (firstNameLookup) {
-                    bib = firstNameLookup.bib;
-                  } else {
-                    alert("Bib not found in roster.");
-                    return;
-                  }
+                  alert("Bib not found in roster.");
+                  return;
                 }
               }
+            }
 
-              bibRaw.value = "";
-              currentBibs.push(bib);
-              await setServerBibs(raceCode, currentBibs);
-              setBibs(currentBibs);
-              bibRaw.focus();
-              setTimeout(() => {
-                table.current?.scrollTo(0, table.current.scrollHeight);
-              }, 1);
-            }}
+            bibRaw.value = "";
+            currentBibs.push(bib);
+            await setServerBibs(raceCode, currentBibs);
+            setBibs(currentBibs);
+            bibRaw.focus();
+            setTimeout(() => {
+              table.current?.scrollTo(0, table.current.scrollHeight);
+            }, 1);
+          }}
+        >
+          <input id="bibnumber" placeholder="Bib Number" required />
+          <Button
+            disabled={!loaded && startTime === null}
             style={{
               flexGrow: 1,
               color: "white",
@@ -114,8 +118,8 @@ export default function Bibs({
             }}
           >
             Mark Finisher
-          </ClientButton>
-        </div>
+          </Button>
+        </form>
         {startTime && (
           <div className={styles.finishersTableContainer} ref={table}>
             <table className={styles.finishersTable}>
