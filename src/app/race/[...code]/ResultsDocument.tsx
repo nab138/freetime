@@ -138,14 +138,18 @@ const ResultsDocument = ({
     }[];
   }[];
 }) => {
-  let showingGender =
-    meet.roster[0].gender !== "" &&
-    meet.roster[0].gender !== "?" &&
-    meet.roster[0].gender !== undefined;
-  let showingAge =
-    meet.roster[0].age !== -1 &&
-    meet.roster[0].age !== undefined &&
-    !isNaN(meet.roster[0].age);
+  let showingGender = true;
+  let showingAge = true;
+  if (meet.roster.length > 0) {
+    showingGender =
+      meet.roster[0].gender !== "" &&
+      meet.roster[0].gender !== "?" &&
+      meet.roster[0].gender !== undefined;
+    showingAge =
+      meet.roster[0].age !== -1 &&
+      meet.roster[0].age !== undefined &&
+      !isNaN(meet.roster[0].age);
+  }
 
   if (!showingGender && resultsName === "Overall" && groups.length > 0) {
     groups = [groups[groups.length - 1]];
