@@ -27,7 +27,7 @@ export default async function RacePage({
   if (params.code.length !== 2 && params.code.length !== 3) {
     return (
       <main>
-        <h1>Invalid URL.</h1>
+        <h1>Invalid URL</h1>
       </main>
     );
   }
@@ -104,7 +104,7 @@ export default async function RacePage({
     } else {
       return (
         <main>
-          <h1>Invalid URL.</h1>
+          <h1>Invalid URL</h1>
         </main>
       );
     }
@@ -177,7 +177,7 @@ export default async function RacePage({
           {(bibs === null || times === null) && <p>No results yet.</p>}
           {bibs !== null && times !== null && (
             <>
-             <ResultsPrinter
+              <ResultsPrinter
                 race={race}
                 meet={meet}
                 bibs={bibs}

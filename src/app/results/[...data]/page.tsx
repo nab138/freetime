@@ -16,7 +16,7 @@ export default async function Results({
   if (params.data.length < 1) {
     return (
       <main>
-        <h1>Invalid URL.</h1>
+        <h1>Invalid URL</h1>
       </main>
     );
   }

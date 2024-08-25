@@ -1,27 +1,26 @@
-import { MeetData, Race, UserData } from "@/structures";
-
+import { auth } from "@/auth";
 import LinkButton from "@/components/LinkButton";
 import { getKv } from "@/kv";
-import { auth } from "@/auth";
+import { MeetData, Race, UserData } from "@/structures";
 import { redirect } from "next/navigation";
-import ResultsEditor from "./ResultsEditor";
+import React from "react";
+import Camera from "./camera";
 
-export const dynamic = "force-dynamic";
-
-export default async function ResultsEditorPage({
+export default async function CameraPage({
   params,
 }: {
   params: {
-    code: string[];
+    params: string[];
   };
 }) {
-  if (params.code.length !== 2 && params.code.length !== 3) {
+  if (params.params.length !== 2 && params.params.length !== 3) {
     return (
       <main>
         <h1>Invalid URL</h1>
       </main>
     );
   }
+
   let session = await auth();
   if (!session || !session.user || !session.user.email) {
     redirect("/");
@@ -33,8 +32,8 @@ export default async function ResultsEditorPage({
     await kv.set(["users", session.user.email], data);
   }
 
-  let meetCode = params.code[0];
-  let raceCode = params.code[1];
+  let meetCode = params.params[0];
+  let raceCode = params.params[1];
   let meet: MeetData | null = null;
   if (data.meets.includes(meetCode)) {
     meet = (await kv.get<MeetData>(["meets", meetCode])).value;
@@ -66,36 +65,12 @@ export default async function ResultsEditorPage({
     );
   }
 
-  let bibs = (await kv.get<number[]>(["bibs", raceCode])).value;
-  let times = (await kv.get<number[]>(["times", raceCode])).value;
-
   return (
     <main>
-      <div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h1>Results Editor</h1>
-          <h3>
-            {meet.name} - {race.name}
-          </h3>
-        </div>
-        {bibs !== null && times !== null && race.startTime !== undefined && (
-          <ResultsEditor
-            bibsRaw={bibs}
-            timesRaw={times}
-            roster={meet.roster}
-            startTime={race.startTime}
-            raceCode={race.code}
-            meetCode={meet.code}
-          />
-        )}
-      </div>
+      <h1>
+        Camera - {meet.name}: {race.name}
+      </h1>
+      <Camera filename={meet.name + " - " + race.name} />
     </main>
   );
 }
