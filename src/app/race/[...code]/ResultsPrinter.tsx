@@ -53,14 +53,14 @@ export default function ResultsPrinter({
   });
 
   let groups: { name: string; data: typeof data }[] = [];
+  let topThreeMale = data
+    .filter((finisher) => finisher.gender === "M")
+    .slice(0, 3);
+  let topThreeFemale = data
+    .filter((finisher) => finisher.gender === "F")
+    .slice(0, 3);
   if (ageRanges === null) {
     let topThree = data.slice(0, 3);
-    let topThreeMale = data
-      .filter((finisher) => finisher.gender === "M")
-      .slice(0, 3);
-    let topThreeFemale = data
-      .filter((finisher) => finisher.gender === "F")
-      .slice(0, 3);
     groups = [
       { name: "Top 3 Overall", data: topThree },
       { name: "Top 3 Male", data: topThreeMale },
@@ -68,8 +68,13 @@ export default function ResultsPrinter({
       { name: "All Participants", data },
     ];
   } else {
+    let ageRangeData = data.filter(
+      (athlete) =>
+        !topThreeMale.find((a) => a.bib === athlete.bib) &&
+        !topThreeFemale.find((a) => a.bib === athlete.bib)
+    );
     ageRanges.forEach((range) => {
-      let rangeData = data.filter(
+      let rangeData = ageRangeData.filter(
         (athlete) => athlete.age >= range[0] && athlete.age <= range[1]
       );
       if (rangeData.length === 0) return;
@@ -106,6 +111,7 @@ export default function ResultsPrinter({
           }
           fileName={ageRanges === null ? "OverallResults" : "AgeGroupResults"}
         >
+          {/* @ts-ignore */}
           {({ loading }) => (loading ? "Loading document..." : "Download PDF")}
         </PDFDownloadLink>
         {ageRanges === null && (
