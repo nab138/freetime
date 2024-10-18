@@ -6,10 +6,10 @@ import ClientButton from "@/components/ClientButton";
 import styles from "./race.module.css";
 import { useEffect, useRef, useState } from "react";
 
-import { getBibs, getStartTime, setServerBibs, setTimes } from "./actions";
-import { toast } from "sonner";
+import { getBibs, getStartTime, setServerBibs } from "./actions";
 import { Athlete } from "@/structures";
 import Button from "@/components/Button";
+import useSound from "use-sound";
 
 export default function Bibs({
   raceCode,
@@ -22,6 +22,7 @@ export default function Bibs({
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [bibs, setBibs] = useState<number[]>([]);
+  const [play] = useSound("/beep.mp3");
 
   const table = useRef<HTMLDivElement>(null);
 
@@ -102,6 +103,7 @@ export default function Bibs({
             currentBibs.push(bib);
             await setServerBibs(raceCode, currentBibs);
             setBibs(currentBibs);
+            play();
             bibRaw.focus();
             setTimeout(() => {
               table.current?.scrollTo(0, table.current.scrollHeight);
@@ -110,6 +112,7 @@ export default function Bibs({
         >
           <input id="bibnumber" placeholder="Bib Number" required />
           <Button
+            type="submit"
             disabled={!loaded && startTime === null}
             style={{
               flexGrow: 1,

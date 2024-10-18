@@ -8,12 +8,14 @@ import { useEffect, useRef, useState } from "react";
 
 import { getStartTime, getTimes, setRaceStartTime, setTimes } from "../actions";
 import { toast } from "sonner";
+import useSound from "use-sound";
 
 export default function Timing({ raceCode }: { raceCode: string }) {
   const [loaded, setLoaded] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [finishers, setFinishers] = useState<number[]>([]);
+  const [play] = useSound("/beep.mp3");
 
   const finishersTable = useRef<HTMLDivElement>(null);
 
@@ -107,7 +109,7 @@ export default function Timing({ raceCode }: { raceCode: string }) {
               currentTimes.push(finishTime.getTime());
               await setTimes(raceCode, currentTimes);
               setFinishers(currentTimes);
-              // Request animation frame to scroll to the bottom of the finishers table
+              play();
               setTimeout(() => {
                 finishersTable.current?.scrollTo(
                   0,
