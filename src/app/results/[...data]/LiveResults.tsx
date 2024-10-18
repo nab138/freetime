@@ -217,7 +217,7 @@ function ResultsTable({
         </tr>
       );
     },
-    [roster, times, startTime]
+    [roster, times, startTime, groups]
   );
   return (
     <table className={styles.resultsTable}>
