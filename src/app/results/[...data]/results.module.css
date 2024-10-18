@@ -21,9 +21,9 @@
     drop-shadow(0 2px rgb(var(--card-border-rgb)));
 }
 .resultsTable {
-  width: 100%;
+  width: 50%;
   max-height: 50vh;
-  min-width: 89vw;
+  min-width: 44.5vw;
 }
 
 .resultsTableContainer {
@@ -33,6 +33,8 @@
   overflow-x: auto;
   max-width: 90vw;
   border-top: 2px solid rgb(var(--card-border-rgb));
+  display: flex;
+  flex-direction: row;
 }
 
 @media screen and (max-width: 750px) {

@@ -144,7 +144,8 @@ const ResultsDocument = ({
     showingGender =
       meet.roster[0].gender !== "" &&
       meet.roster[0].gender !== "?" &&
-      meet.roster[0].gender !== undefined;
+      meet.roster[0].gender !== undefined &&
+      resultsName !== "Age Group";
     showingAge =
       meet.roster[0].age !== -1 &&
       meet.roster[0].age !== undefined &&
@@ -154,9 +155,6 @@ const ResultsDocument = ({
   if (!showingGender && resultsName === "Overall" && groups.length > 0) {
     groups = [groups[groups.length - 1]];
   }
-
-  console.log(groups);
-
   return (
     <Document>
       <Page style={styles.page}>

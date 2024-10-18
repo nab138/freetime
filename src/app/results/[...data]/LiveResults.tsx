@@ -7,6 +7,9 @@ import { getBibs, getMeet, getRace, getTimes } from "./actions";
 import { Athlete } from "@/structures";
 import ClientButton from "@/components/ClientButton";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { calculateGroups, Group } from "@/app/race/[...code]/ResultsPrinter";
+import { AgeRange } from "@/app/race/[...code]/AgeRanges";
+import { getAgeRanges } from "@/app/race/[...code]/actions";
 
 export default function LiveResults({
   meetCode,
@@ -26,6 +29,47 @@ export default function LiveResults({
 
   const handle = useFullScreenHandle();
   const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  const [ageRanges, setAgeRangesState] = useState<AgeRange[] | null>(null);
+  const [groupData, setGroupData] = useState<Group[] | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const ranges = await getAgeRanges(raceCode);
+      setAgeRangesState(ranges);
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (
+      ageRanges === null ||
+      ageRanges === undefined ||
+      bibs === undefined ||
+      times === undefined ||
+      roster === undefined ||
+      startTime === undefined
+    )
+      return;
+    let data = bibs.map((bib, i) => {
+      let athlete = roster.find((athlete) => athlete.bib === bib);
+      if (athlete === undefined) {
+        athlete = {
+          name: "Unknown Runner",
+          age: -1,
+          team: "Unknown Team",
+          bib,
+          gender: "?",
+        };
+      }
+      return {
+        ...athlete,
+        time: times[i],
+        place: i + 1,
+      };
+    });
+    let groups = calculateGroups(data, ageRanges, "Mixed");
+    setGroupData(groups);
+  }, [ageRanges, bibs, times, roster, startTime]);
 
   const reportChange = useCallback(
     (state: boolean) => {
@@ -112,47 +156,134 @@ export default function LiveResults({
             }
             ref={tableContainerRef}
           >
-            <table className={styles.resultsTable}>
-              <thead>
-                <tr>
-                  <th>Place</th>
-                  <th>Name</th>
-                  <th>Gender</th>
-                  <th>Age</th>
-                  <th>Bib</th>
-                  <th>Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bibs.map((bib, index) => {
-                  let athlete = roster.find((a) => a.bib === bib);
-                  return (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{athlete?.name ?? "Unkown Runner"}</td>
-                      <td>{athlete?.gender ?? "?"}</td>
-                      <td>{athlete?.age ?? "?"}</td>
-                      <td>{bib}</td>
-                      <td>
-                        {times.length <= index &&
-                        startTime !== undefined &&
-                        startTime !== null
-                          ? "N/A"
-                          : formatTimeDifference(
-                              new Date(startTime as number),
-                              new Date(times[index]),
-                              true
-                            )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <ResultsTable
+              isFullscreen={handle.active}
+              bibs={bibs}
+              times={times}
+              startTime={startTime}
+              roster={roster}
+            />
+            <ResultsTable
+              isFullscreen={handle.active}
+              bibs={bibs}
+              times={times}
+              startTime={startTime}
+              roster={roster}
+              groups={groupData}
+            />
           </div>
         </FullScreen>
       )}
     </Card>
+  );
+}
+
+function ResultsTable({
+  isFullscreen,
+  bibs,
+  roster,
+  times,
+  startTime,
+  groups = null,
+}: {
+  isFullscreen: boolean;
+  bibs: number[];
+  times: number[];
+  startTime: number | null;
+  roster: Athlete[];
+  groups?: Group[] | null;
+}) {
+  const generateAthleteRow = useCallback(
+    (bib: number, index: number) => {
+      let athlete = roster.find((a) => a.bib === bib);
+      return (
+        <tr key={index}>
+          <td>{index + 1}</td>
+          <td>{athlete?.name ?? "Unkown Runner"}</td>
+          {groups === null && <td>{athlete?.gender ?? "?"}</td>}
+          <td>{athlete?.age ?? "?"}</td>
+          <td>{bib}</td>
+          <td>
+            {times.length <= index &&
+            startTime !== undefined &&
+            startTime !== null
+              ? "N/A"
+              : formatTimeDifference(
+                  new Date(startTime as number),
+                  new Date(times[index]),
+                  true
+                )}
+          </td>
+        </tr>
+      );
+    },
+    [roster, times, startTime]
+  );
+  return (
+    <table className={styles.resultsTable}>
+      <thead>
+        {isFullscreen && (
+          <tr
+            style={{
+              borderBottom: "2px solid rgb(var(--card-border-rgb))",
+            }}
+          >
+            <th colSpan={6}>
+              <h3
+                style={{
+                  color: "var(--danger)",
+                  fontWeight: "bold",
+                  textAlign: "left",
+                  width: "100%",
+                }}
+              >
+                Results are NOT final! If you see an error, report it to a race
+                official immediately.
+              </h3>
+            </th>
+          </tr>
+        )}
+        <tr
+          style={{
+            borderBottom: "2px solid rgb(var(--card-border-rgb))",
+          }}
+        >
+          <th colSpan={6}>
+            <p
+              style={{
+                fontWeight: "bold",
+              }}
+            >
+              {groups !== null ? "Age Group Results" : "Overall Results"}
+            </p>
+          </th>
+        </tr>
+        <tr>
+          <th>Place</th>
+          <th>Name</th>
+          {groups === null && <th>Gender</th>}
+          <th>Age</th>
+          <th>Bib</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {groups === null && bibs.map(generateAthleteRow)}
+        {groups !== null &&
+          groups.map((group) => {
+            return (
+              <>
+                <tr>
+                  <td colSpan={6}>
+                    <h4>{group.name}</h4>
+                  </td>
+                </tr>
+                {group.data.map((d) => generateAthleteRow(d.bib, d.place - 1))}
+              </>
+            );
+          })}
+      </tbody>
+    </table>
   );
 }
 
