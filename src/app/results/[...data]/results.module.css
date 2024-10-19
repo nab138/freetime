@@ -33,6 +33,7 @@
   overflow-x: auto;
   max-width: 90vw;
   border-top: 2px solid rgb(var(--card-border-rgb));
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
 }
