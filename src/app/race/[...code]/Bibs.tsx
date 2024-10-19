@@ -110,7 +110,12 @@ export default function Bibs({
             }, 1);
           }}
         >
-          <input id="bibnumber" placeholder="Bib Number" required />
+          <input
+            type="number"
+            id="bibnumber"
+            placeholder="Bib Number"
+            required
+          />
           <Button
             type="submit"
             disabled={!loaded && startTime === null}

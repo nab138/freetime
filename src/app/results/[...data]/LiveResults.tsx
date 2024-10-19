@@ -140,7 +140,6 @@ export default function LiveResults({
           maxHeight = height;
         }
       });
-      console.log(maxHeight);
 
       columns.forEach((column) => {
         (column as HTMLElement).style.height = `${maxHeight}px`;
@@ -157,7 +156,7 @@ export default function LiveResults({
     return () => {
       window.removeEventListener("resize", adjustColumnHeights);
     };
-  }, [bibs, times, roster, groupData, adjustColumnHeights]);
+  }, [bibs, times, roster, groupData, adjustColumnHeights, handle.active]);
 
   return (
     <Card style={{ flexGrow: 1 }}>
