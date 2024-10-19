@@ -1,15 +1,15 @@
 "use client";
 
-import Card from "@/components/Card";
+import { useEffect, useRef, useState, useCallback, Fragment } from "react";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import styles from "./results.module.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+import Card from "@/components/Card";
+import ClientButton from "@/components/ClientButton";
 import { getBibs, getMeet, getRace, getTimes } from "./actions";
 import { Athlete } from "@/structures";
-import ClientButton from "@/components/ClientButton";
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import { calculateGroups, Group } from "@/app/race/[...code]/ResultsPrinter";
 import { AgeRange } from "@/app/race/[...code]/AgeRanges";
 import { getAgeRanges } from "@/app/race/[...code]/actions";
+import { calculateGroups, Group } from "@/app/race/[...code]/resultsutils";
 
 export default function LiveResults({
   meetCode,
@@ -38,7 +38,7 @@ export default function LiveResults({
       const ranges = await getAgeRanges(raceCode);
       setAgeRangesState(ranges);
     })();
-  }, []);
+  }, [raceCode]);
 
   useEffect(() => {
     if (
@@ -119,12 +119,46 @@ export default function LiveResults({
       setBibs(newBibs);
       setTimes(newTimes);
       setStartTime(newRace?.startTime);
-      if (newMeet?.roster !== undefined && roster !== newMeet?.roster)
-        setRoster(newMeet?.roster ?? []);
+      if (newMeet?.roster !== undefined) setRoster(newMeet?.roster ?? []);
     };
     update();
-    setInterval(update, loggedIn ? 30 * 1000 : 5 * 60 * 1000);
+    const interval = setInterval(update, loggedIn ? 30 * 1000 : 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [raceCode, meetCode, loggedIn]);
+
+  const adjustColumnHeights = useCallback(() => {
+    if (tableContainerRef.current) {
+      const columns = tableContainerRef.current.querySelectorAll(
+        `.${styles.column}`
+      );
+      let maxHeight = 0;
+
+      columns.forEach((column) => {
+        (column as HTMLElement).style.height = "auto"; // Reset height
+        const height = column.scrollHeight;
+        if (height > maxHeight) {
+          maxHeight = height;
+        }
+      });
+      console.log(maxHeight);
+
+      columns.forEach((column) => {
+        (column as HTMLElement).style.height = `${maxHeight}px`;
+        (
+          (column as HTMLElement).firstElementChild as HTMLElement
+        ).style.height = `${maxHeight}px`;
+      });
+    }
   }, []);
+
+  useEffect(() => {
+    adjustColumnHeights();
+    window.addEventListener("resize", adjustColumnHeights);
+    return () => {
+      window.removeEventListener("resize", adjustColumnHeights);
+    };
+  }, [bibs, times, roster, groupData, adjustColumnHeights]);
+
   return (
     <Card style={{ flexGrow: 1 }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -156,21 +190,25 @@ export default function LiveResults({
             }
             ref={tableContainerRef}
           >
-            <ResultsTable
-              isFullscreen={handle.active}
-              bibs={bibs}
-              times={times}
-              startTime={startTime}
-              roster={roster}
-            />
-            <ResultsTable
-              isFullscreen={handle.active}
-              bibs={bibs}
-              times={times}
-              startTime={startTime}
-              roster={roster}
-              groups={groupData}
-            />
+            <div className={styles.column}>
+              <ResultsTable
+                isFullscreen={handle.active}
+                bibs={bibs}
+                times={times}
+                startTime={startTime}
+                roster={roster}
+              />
+            </div>
+            <div className={styles.column}>
+              <ResultsTable
+                isFullscreen={handle.active}
+                bibs={bibs}
+                times={times}
+                startTime={startTime}
+                roster={roster}
+                groups={groupData}
+              />
+            </div>
           </div>
         </FullScreen>
       )}
@@ -199,7 +237,7 @@ function ResultsTable({
       return (
         <tr key={index}>
           <td>{index + 1}</td>
-          <td>{athlete?.name ?? "Unkown Runner"}</td>
+          <td>{athlete?.name ?? "Unknown Runner"}</td>
           {groups === null && <td>{athlete?.gender ?? "?"}</td>}
           <td>{athlete?.age ?? "?"}</td>
           <td>{bib}</td>
@@ -272,14 +310,14 @@ function ResultsTable({
         {groups !== null &&
           groups.map((group) => {
             return (
-              <>
+              <Fragment key={group.name}>
                 <tr>
                   <td colSpan={6}>
                     <h4>{group.name}</h4>
                   </td>
                 </tr>
                 {group.data.map((d) => generateAthleteRow(d.bib, d.place - 1))}
-              </>
+              </Fragment>
             );
           })}
       </tbody>

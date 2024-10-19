@@ -25,7 +25,7 @@ export default async function Results({
   if (!meet) {
     return (
       <main>
-        <h1>Unkown meet</h1>
+        <h1>Unknown meet</h1>
       </main>
     );
   }
@@ -36,7 +36,7 @@ export default async function Results({
     if (!race) {
       return (
         <main>
-          <h1>Unkown Race</h1>
+          <h1>Unknown Race</h1>
         </main>
       );
     }
@@ -69,6 +69,20 @@ export default async function Results({
     );
   }
 
+  const races = await Promise.all(
+    meet.races.map(async (raceCode) => {
+      let race = (await kv.get<Race>(["race", raceCode])).value;
+      if (!race) return null;
+      return (
+        <li key={raceCode}>
+          <Link href={"/results/" + meetCode + "/" + raceCode}>
+            {race.name}
+          </Link>
+        </li>
+      );
+    })
+  );
+
   return (
     <main>
       <div style={{ textAlign: "center" }}>
@@ -81,17 +95,7 @@ export default async function Results({
       <Card>
         <h2>Races:</h2>
         <ul style={{ listStyle: "none", textDecoration: "underline" }}>
-          {meet.races.map(async (raceCode, i) => {
-            let race = (await kv.get<Race>(["race", raceCode])).value;
-            if (!race) return;
-            return (
-              <li key={raceCode}>
-                <Link href={"/results/" + meetCode + "/" + raceCode}>
-                  {race.name}
-                </Link>
-              </li>
-            );
-          })}
+          {races.filter(Boolean)}
         </ul>
       </Card>
     </main>
