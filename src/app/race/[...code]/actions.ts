@@ -3,6 +3,9 @@
 import { getKv } from "@/kv";
 import { MeetData, Race } from "@/structures";
 import { AgeRange } from "./AgeRanges";
+import { Mutex } from "async-mutex";
+
+const timesMutex = new Mutex();
 
 export async function deleteRace(
   code: string,
@@ -39,12 +42,26 @@ export async function setRaceStartTime(code: string, time: number) {
 
 export async function getTimes(code: string) {
   const kv = await getKv();
-  return (await kv.get<number[]>(["times", code])).value ?? [];
+  let res = await kv.get<number[]>(["times", code]);
+  return res.value ?? [];
 }
 
 export async function setTimes(code: string, times: number[]) {
-  const kv = await getKv();
-  await kv.set(["times", code], times);
+  return timesMutex.runExclusive(async () => {
+    const kv = await getKv();
+    await kv.set(["times", code], times);
+  });
+}
+
+export async function appendTimes(code: string, newTime: number) {
+  return timesMutex.runExclusive(async () => {
+    const kv = await getKv();
+    let res = await kv.get<number[]>(["times", code]);
+    let times = res.value ?? [];
+    times.push(newTime);
+    await kv.set(["times", code], times);
+    return times;
+  });
 }
 
 export async function getBibs(code: string) {

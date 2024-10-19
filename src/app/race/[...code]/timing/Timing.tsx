@@ -6,7 +6,13 @@ import ClientButton from "@/components/ClientButton";
 import styles from "../race.module.css";
 import { useEffect, useRef, useState } from "react";
 
-import { getStartTime, getTimes, setRaceStartTime, setTimes } from "../actions";
+import {
+  getStartTime,
+  getTimes,
+  setRaceStartTime,
+  setTimes,
+  appendTimes,
+} from "../actions";
 import { toast } from "sonner";
 import useSound from "use-sound";
 
@@ -105,10 +111,11 @@ export default function Timing({ raceCode }: { raceCode: string }) {
             disabled={!loaded || startTime === null}
             onClick={async () => {
               let finishTime = new Date();
-              let currentTimes = await getTimes(raceCode);
-              currentTimes.push(finishTime.getTime());
-              await setTimes(raceCode, currentTimes);
-              setFinishers(currentTimes);
+              let updatedTimes = await appendTimes(
+                raceCode,
+                finishTime.getTime()
+              );
+              setFinishers(updatedTimes);
               play();
               setTimeout(() => {
                 finishersTable.current?.scrollTo(

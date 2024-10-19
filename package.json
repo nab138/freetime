@@ -12,6 +12,7 @@
     "@david.kucsai/react-pdf-table": "^0.4.1",
     "@ducanh2912/next-pwa": "^10.2.8",
     "@react-pdf/renderer": "^3.4.4",
+    "async-mutex": "^0.5.0",
     "bcrypt-edge": "^0.0.6",
     "kv-connect-kit": "^0.0.5",
     "next": "14.2.15",
