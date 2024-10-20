@@ -111,12 +111,12 @@ export default function Timing({ raceCode }: { raceCode: string }) {
             disabled={!loaded || startTime === null}
             onClick={async () => {
               let finishTime = new Date();
+              play();
               let updatedTimes = await appendTimes(
                 raceCode,
                 finishTime.getTime()
               );
               setFinishers(updatedTimes);
-              play();
               setTimeout(() => {
                 finishersTable.current?.scrollTo(
                   0,
@@ -153,7 +153,7 @@ export default function Timing({ raceCode }: { raceCode: string }) {
                       >
                         🗑
                       </ClientButton>
-                      {formatTimeDifference(startTime, new Date(time))}
+                      {formatTimeDifference(startTime, new Date(time), true)}
                     </td>
                   </tr>
                 ))}
