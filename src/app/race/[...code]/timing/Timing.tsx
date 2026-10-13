@@ -39,7 +39,7 @@ export default function Timing({ raceCode }: { raceCode: string }) {
         setTimeout(() => {
           finishersTable.current?.scrollTo(
             0,
-            finishersTable.current.scrollHeight
+            finishersTable.current.scrollHeight,
           );
         }, 1);
         setLoaded(true);
@@ -74,13 +74,13 @@ export default function Timing({ raceCode }: { raceCode: string }) {
               // starttime is stored as a number
               let result = await setRaceStartTime(
                 raceCode,
-                startTime.getTime()
+                startTime.getTime(),
               );
               if (result && result.error) {
                 toast.error(result.error);
                 toast.info(
                   "If you missed the start of a race, screenshot this and input this timestamp: " +
-                    startTime.getTime()
+                    startTime.getTime(),
                 );
               } else {
                 setStartTime(startTime);
@@ -95,7 +95,7 @@ export default function Timing({ raceCode }: { raceCode: string }) {
             disabled={!loaded || startTime === null}
             onClick={() => {
               alert(
-                "We have the button, so we are better than XCMeet, but it doesn't do anything yet."
+                "We have the button, so we are better than XCMeet, but it doesn't do anything yet.",
               );
             }}
             style={{ color: "white", backgroundColor: "var(--danger)" }}
@@ -106,7 +106,15 @@ export default function Timing({ raceCode }: { raceCode: string }) {
       </Card>
       <Card>
         <h2>Finishers</h2>
-        <div className={styles.buttons} style={{ marginTop: "15px" }}>
+        <div
+          className={styles.buttons}
+          style={{
+            marginTop: "15px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
           <ClientButton
             disabled={!loaded || startTime === null}
             onClick={async () => {
@@ -114,13 +122,13 @@ export default function Timing({ raceCode }: { raceCode: string }) {
               play();
               let updatedTimes = await appendTimes(
                 raceCode,
-                finishTime.getTime()
+                finishTime.getTime(),
               );
               setFinishers(updatedTimes);
               setTimeout(() => {
                 finishersTable.current?.scrollTo(
                   0,
-                  finishersTable.current.scrollHeight
+                  finishersTable.current.scrollHeight,
                 );
               }, 1);
             }}
@@ -134,6 +142,9 @@ export default function Timing({ raceCode }: { raceCode: string }) {
           >
             Mark Finisher
           </ClientButton>
+          <p>
+            {finishers.length} finisher{finishers.length !== 1 ? "s" : ""}
+          </p>
         </div>
         {startTime && (
           <div className={styles.finishersTableContainer} ref={finishersTable}>
@@ -169,7 +180,7 @@ export default function Timing({ raceCode }: { raceCode: string }) {
 function formatTimeDifference(
   startTime: Date,
   currentTime: Date,
-  subSeconds: boolean = false
+  subSeconds: boolean = false,
 ): string {
   const timeDifference = currentTime.getTime() - startTime.getTime();
 
@@ -188,7 +199,7 @@ function formatTimeDifference(
 
   if (subSeconds) {
     const formattedMilliseconds = String(
-      Math.floor(milliseconds / 10)
+      Math.floor(milliseconds / 10),
     ).padStart(2, "0");
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
   }
