@@ -2,7 +2,7 @@
 
 A free cross-country race timer, built with Next.js and Upstash Redis.
 
-Intended to be self-hosted, but you can view a live demo at: https://freetime.nabdev.me
+Intended to be self-hosted, but you can view a live demo at: https://freetime.nabdev.me (hosted on vercel, with a free Upstash Redis instance)
 
 Used in the 2024 and 2025 [Malta Trail Race](https://roundaboutrunnersclub.com/trail-series-2k-3k-5k)
 
