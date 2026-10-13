@@ -6,6 +6,9 @@ import { compareSync, hashSync } from "bcrypt-edge";
 import { signInSchema } from "./lib/zod";
 import { UserData } from "./structures";
 
+const registrationEnabled = true;
+const allowResettingPassword = true;
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   providers: [
@@ -28,10 +31,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!user) {
           // No user found, so this is their first attempt to login
           // meaning this is also the place you could do registration
-          throw new Error("User not found.");
-        }
+          if (!registrationEnabled) {
+            throw new Error("Registration is disabled");
+          }
 
-        if (!user.password) {
+          const pwHash = hashSync(password, 10);
+          let user = {
+            email: email.toLowerCase(),
+            password: pwHash,
+            meets: [],
+          };
+          await kv.set(["users", email.toLowerCase()], user);
+          return user;
+        }
+        if (allowResettingPassword || !user.password) {
           const pwHash = hashSync(password, 10);
           user.password = pwHash;
           await kv.set(["users", email.toLowerCase()], user);
