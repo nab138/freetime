@@ -66,7 +66,12 @@ export default function Bibs({
         <p>End Time: N/A</p>
       </Card>
       <Card>
-        <h2>Finishers (bibs)</h2>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h2>Finishers (bibs)</h2>
+          <p>
+            {bibs.length} finisher{bibs.length !== 1 ? "s" : ""}
+          </p>
+        </div>
         <form
           className={styles.buttons}
           style={{ marginTop: "15px" }}
@@ -74,7 +79,7 @@ export default function Bibs({
             event.preventDefault();
             event.stopPropagation();
             let bibRaw = document.getElementById(
-              "bibnumber"
+              "bibnumber",
             ) as HTMLInputElement;
             let bib = parseInt(bibRaw.value);
             let currentBibs = await getBibs(raceCode);
@@ -88,7 +93,7 @@ export default function Bibs({
                 bib = nameLookup.bib;
               } else {
                 let firstNameLookup = roster.find(
-                  (a) => a.name.split(" ")[0] === bibRaw.value
+                  (a) => a.name.split(" ")[0] === bibRaw.value,
                 );
                 if (firstNameLookup) {
                   bib = firstNameLookup.bib;
@@ -162,7 +167,7 @@ export default function Bibs({
 function formatTimeDifference(
   startTime: Date,
   currentTime: Date,
-  subSeconds: boolean = false
+  subSeconds: boolean = false,
 ): string {
   const timeDifference = currentTime.getTime() - startTime.getTime();
 
@@ -181,7 +186,7 @@ function formatTimeDifference(
 
   if (subSeconds) {
     const formattedMilliseconds = String(
-      Math.floor(milliseconds / 10)
+      Math.floor(milliseconds / 10),
     ).padStart(2, "0");
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
   }
