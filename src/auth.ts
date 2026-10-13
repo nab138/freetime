@@ -6,8 +6,8 @@ import { compareSync, hashSync } from "bcrypt-edge";
 import { signInSchema } from "./lib/zod";
 import { UserData } from "./structures";
 
-const registrationEnabled = true;
-const allowResettingPassword = true;
+const registrationEnabled = false;
+const allowResettingPassword = false;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
